@@ -24,58 +24,58 @@ import { AlexandriaProvider, useAlexandria } from "@xplato/alexandria"
 
 // Define your settings schema
 const schema = {
-  theme: {
-    allow: ["light", "dark"],
-    default: "light",
-  },
-  sessionID: {
-    validate: value => isUUID(value), // an imperative alternative to setting `allow`
-    default: "00000000-0000-0000-0000-000000000000",
-  },
+	theme: {
+		allow: ["light", "dark"],
+		default: "light",
+	},
+	sessionID: {
+		validate: value => isUUID(value), // an imperative alternative to setting `allow`
+		default: "00000000-0000-0000-0000-000000000000",
+	},
 }
 
 // Define your config (optional)
 const config = {
-  // They primary localStorage key
-  key: "alexandria", // default
+	// They primary localStorage key
+	key: "alexandria", // default
 }
 
 // Wrap your app with the AlexandriaProvider
 const App = () => (
-  <AlexandriaProvider schema={schema} config={config}>
-    <Main />
-  </AlexandriaProvider>
+	<AlexandriaProvider schema={schema} config={config}>
+		<Main />
+	</AlexandriaProvider>
 )
 
 // Use the useAlexandria hook to access your settings
 const Main = () => {
-  const alexandria = useAlexandria()
+	const alexandria = useAlexandria()
 
-  return (
-    <div>
-      <h1>Settings</h1>
-      <p>Theme: {alexandria.theme}</p>
-      <p>Session ID: {alexandria.sessionID}</p>
+	return (
+		<div>
+			<h1>Settings</h1>
+			<p>Theme: {alexandria.theme}</p>
+			<p>Session ID: {alexandria.sessionID}</p>
 
-      <button
-        onClick={() =>
-          alexandria.toggleBetween("theme", ["light", "dark"])
-        }
-      >
-        Toggle theme
-      </button>
-      <button
-        onClick={() =>
-          alexandria.set(
-            "sessionID",
-            "1111111-1111-1111-1111-111111111111"
-          )
-        }
-      >
-        Reset session ID
-      </button>
-    </div>
-  )
+			<button
+				onClick={() =>
+					alexandria.toggleBetween("theme", ["light", "dark"])
+				}
+			>
+				Toggle theme
+			</button>
+			<button
+				onClick={() =>
+					alexandria.set(
+						"sessionID",
+						"1111111-1111-1111-1111-111111111111"
+					)
+				}
+			>
+				Reset session ID
+			</button>
+		</div>
+	)
 }
 ```
 
@@ -96,29 +96,29 @@ It accepts two props:
 
 #### `schema`
 
-[Go to type definition](#alexandria)
+[Go to type definition](https://github.com/xplato/alexandria/blob/main/src/types.ts#L3-L9)
 
-The schema is an object that defines the structure of your settings. It contains properties for allowing certain values, implicitly validating values, and providing default values.
+The schema is an object that defines the structure of all your settings. It is used during validation to ensure the user's settings are in sync with your schema. It also defines the default values for your settings.
 
 As an example, let's say you want to store a user's theme preference. You could define your schema like this:
 
 ```jsx
 const schema = {
-  theme: {
-    allow: ["light", "dark"],
-    default: "light",
-  },
+	theme: {
+		allow: ["light", "dark"],
+		default: "light",
+	},
 }
 ```
 
-In a lot of cases, you'll know ahead of time the values your settings can be. Sometimes, however, you don't. For those cases, you can simply use `"*"` to allow any value. For instance, if you allow the user to set the accent to any hex value, you could do this:
+In a lot of cases, you'll know ahead of time what values your settings can be. Sometimes, however, you don't. For those cases, you can simply use `"*"` to allow any value. For instance, if you allow the user to set the accent to any hex value, you could do this:
 
 ```jsx
 const schema = {
-  accent: {
-    allow: "*",
-    default: "#3452ff",
-  },
+	accent: {
+		allow: "*",
+		default: "#3452ff",
+	},
 }
 ```
 
@@ -126,24 +126,24 @@ Better yet, you can alternatively define a `validate` function to perform more c
 
 ```jsx
 const schema = {
-  accent: {
-    validate: value => /^#[0-9a-f]{6}$/i.test(value),
-    default: "#3452ff",
-  },
+	accent: {
+		validate: value => /^#[0-9a-f]{6}$/i.test(value),
+		default: "#3452ff",
+	},
 }
 ```
 
-View the [type definition](#alexandria) for more information.
+View the [type definition](https://github.com/xplato/alexandria/blob/main/src/types.ts#L3-L9) for more information.
 
 #### `config`
 
-[Go to type definition](#alexandriaconfig)
+[Go to type definition](https://github.com/xplato/alexandria/blob/main/src/types.ts#L15-L17)
 
 The config is a small object that allows you to tweak some data/behavior of Alexandria. Right now, it contains a single property: `key`. This is the key used for the settings in `localStorage` (Alexandria uses only one key for all settings).
 
 ### `useAlexandria`
 
-The `useAlexandria` hook is what you use to access your settings. It returns an object with your settings ...spread and then some methods for manipulating them.
+The `useAlexandria` hook is what you use to access your settings. It returns a merged object of your settings and some methods for updating them.
 
 I prefer to use and assign the whole object directly like so:
 
@@ -182,8 +182,8 @@ alexandria.set("theme", "dark")
 
 ```jsx
 alexandria.update({
-  theme: "dark",
-  sessionID: "1111111-1111-1111-1111-111111111111",
+	theme: "dark",
+	sessionID: "1111111-1111-1111-1111-111111111111",
 })
 ```
 
@@ -197,7 +197,7 @@ alexandria.toggle("darkMode")
 
 ##### `toggleBetween`
 
-`toggleBetween` is used to toggle a setting between a list of values. It accepts two arguments: the setting name and an array of 2 values to toggle between. A more specific alternative to `cycleBetween`.
+`toggleBetween` is used to toggle a setting between a list of 2 values. It accepts two arguments: the setting name and an array of 2 values to toggle between. This is a more specific alternative to `cycleBetween`.
 
 ```jsx
 alexandria.toggleBetween("theme", ["light", "dark"])
@@ -226,8 +226,16 @@ Alexandria uses your schema to perform automatic validation during the initial r
 
 There are a number of checks being performed:
 
--   If the setting is not found in the schema, it's deleted.
+-   If the setting is not recognized, it's deleted.
 -   If the setting is found in the schema, but the value is not allowed, it's set to the default value.
+-   If the user hasn't been here before (i.e. the entire object is missing), it's set to the all the default values (meaning they will always be defined)
+
+### Persistence & Limitations
+
+Alexandria uses `localStorage` to persist your settings. This has a few quirks and limitations:
+
+-   You are limited to around 5MB of data. This is by most accounts more than enough, but it's something to keep in mind.
+-   Persistence is only ensured as long as the user doesn't clear their browser data and cookies. This is a limitation of `localStorage` itself. If you need _permanent_ storage, you should use a database.
 
 ### Integration with SSR
 
