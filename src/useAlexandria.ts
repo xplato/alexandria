@@ -5,7 +5,7 @@ import { compileDefaultSettingsFromSchema, isAllowedValue } from "logic"
 import { getSavedObject, saveObject } from "storage"
 import { alexandriaError } from "errors"
 
-import { AlexandriaOperatingContext, UnknownSettings } from "types"
+import { AlexandriaOperatingContext, UnknownSettings } from "rtypes"
 
 export const useAlexandria = <
 	T extends UnknownSettings = UnknownSettings

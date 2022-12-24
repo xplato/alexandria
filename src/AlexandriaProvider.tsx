@@ -4,7 +4,7 @@ import { AlexandriaContext } from "context"
 import { getSavedObject } from "storage"
 import { compileDefaultSettingsFromSchema } from "logic"
 
-import type { Config, Schema, UnknownSettings } from "types"
+import type { Config, Schema, UnknownSettings } from "rtypes"
 
 const defaultConfig: Config = {
 	key: "alexandria",

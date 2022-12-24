@@ -1,5 +1,5 @@
 import React from "react";
-import type { Config, Schema, UnknownSettings } from "types";
+import type { Config, Schema, UnknownSettings } from "rtypes";
 interface Props {
     schema: Schema;
     config?: Config;

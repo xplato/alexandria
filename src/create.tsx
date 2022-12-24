@@ -8,7 +8,7 @@ import {
 	AlexandriaOperatingContext,
 	Schema,
 	UnknownSettings,
-} from "types"
+} from "rtypes"
 
 export const createAlexandria = <KnownSettings extends UnknownSettings>(
 	schema: Schema

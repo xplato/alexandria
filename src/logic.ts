@@ -1,5 +1,5 @@
 import { alexandriaError } from "errors"
-import { Schema, SettingValue, UnknownSettings } from "types"
+import { Schema, SettingValue, UnknownSettings } from "rtypes"
 
 export const isAllowedValue = (
 	key: string,

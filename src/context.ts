@@ -1,5 +1,5 @@
 import { createContext } from "react"
 
-import { TAlexandriaContext } from "types"
+import { TAlexandriaContext } from "rtypes"
 
 export const AlexandriaContext = createContext<TAlexandriaContext>({} as never)
