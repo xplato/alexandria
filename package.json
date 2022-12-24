@@ -1,7 +1,7 @@
 {
 	"name": "@xplato/alexandria",
 	"version": "1.1.0",
-	"author": "xplato <xplato@infi.im>",
+	"author": "Tristan Brewster <xplato@infi.im>",
 	"license": "MIT",
 	"repository": "https://github.com/xplato/alexandria",
 	"description": "Lightweight React wrapper of `localStorage` for declarative management of user preferences and settings.",

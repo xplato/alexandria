@@ -20,7 +20,7 @@ const App = ({ Component, pageProps }: AppProps) => {
 				theme: {
 					allow: ["light", "dark", "system"],
 					default: "system",
-				}
+				},
 			}}
 			config={{
 				key: "alexandria",

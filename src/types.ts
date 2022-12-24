@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react"
+
 export interface Alexandria extends Settings {
 	cycleBetween: (key: string, values: string[]) => void
 	reset: (key?: string) => void
@@ -22,4 +24,11 @@ export interface Settings {
 
 export interface Config {
 	key: string
+}
+
+export interface AlexandriaContext {
+	settings: Settings
+	setSettings: Dispatch<SetStateAction<Settings>>
+	schema: Schema
+	config: Config
 }
