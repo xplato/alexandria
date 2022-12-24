@@ -13,8 +13,8 @@ export type SettingValue = string | boolean | number | unknown[] | object
 
 export interface Schema {
 	[key: string]: {
-		allow: string[] | boolean[] | "*" | undefined
-		validate: ((value: SettingValue) => boolean) | undefined
+		allow?: string[] | boolean[] | "*"
+		validate?: (value: SettingValue) => boolean
 		default: SettingValue
 	}
 }
