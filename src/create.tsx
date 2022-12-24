@@ -10,7 +10,7 @@ import {
 } from "types"
 import { useAlexandria } from "useAlexandria"
 
-export const createAlexandria = <KnownSettings extends UnknownSettings = {}>(
+export const createAlexandria = <KnownSettings extends UnknownSettings>(
 	schema: Schema
 ): AlexandriaCreationContext<KnownSettings> => {
 	type Alexandria = AlexandriaOperatingContext & KnownSettings
@@ -21,8 +21,8 @@ export const createAlexandria = <KnownSettings extends UnknownSettings = {}>(
 		</AlexandriaProvider>
 	)
 
-	const Consumer = (): (() => Alexandria) => {
-		return useAlexandria<KnownSettings>
+	const Consumer = (): Alexandria => {
+		return useAlexandria<KnownSettings>()
 	}
 
 	return {
