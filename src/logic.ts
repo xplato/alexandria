@@ -1,7 +1,7 @@
-import { Schema, Settings, SettingValue } from "types"
+import { Schema, SettingValue, UnknownSettings } from "types"
 
 export const isAllowedValue = (
-	key: keyof Settings,
+	key: string,
 	value: SettingValue,
 	schema: Schema
 ): boolean => {
@@ -28,12 +28,14 @@ export const isAllowedValue = (
 	return setting.allow.includes(value as never)
 }
 
-export const compileDefaultSettingsFromSchema = (schema: Schema): Settings => {
-	let settings: Partial<Settings> = {}
+export const compileDefaultSettingsFromSchema = (
+	schema: Schema
+): UnknownSettings => {
+	let settings: Partial<UnknownSettings> = {}
 
 	for (const [key, value] of Object.entries(schema)) {
 		settings[key] = value.default
 	}
 
-	return settings as Settings // Caller is responsible for providing defaults
+	return settings as UnknownSettings // Caller is responsible for providing defaults
 }

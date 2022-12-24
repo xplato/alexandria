@@ -1,4 +1,4 @@
-import { useAlexandria } from "@xplato/alexandria"
+import { useAlexandria } from "../logic"
 
 const Home = () => {
 	const alexandria = useAlexandria()
@@ -11,9 +11,8 @@ const Home = () => {
 				<h1>Alexandria</h1>
 
 				<div className="w-100p">
-					<p>Accent:</p>
 					<pre>
-						<code>{alexandria.accent}</code>
+						<code>{JSON.stringify(alexandria)}</code>
 					</pre>
 
 					<div className="flex">

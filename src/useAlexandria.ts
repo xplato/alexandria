@@ -5,20 +5,30 @@ import { compileDefaultSettingsFromSchema, isAllowedValue } from "logic"
 import { getSavedObject, saveObject } from "storage"
 import { alexandriaError } from "errors"
 
-import { Alexandria, Settings } from "types"
+import { AlexandriaOperatingContext, UnknownSettings } from "types"
 
-export const useAlexandria = (): Alexandria => {
+export const useAlexandria = <
+	T extends UnknownSettings = UnknownSettings
+>(): AlexandriaOperatingContext & T => {
 	const { settings, setSettings, schema, config } =
 		useContext(AlexandriaContext)
+
+	type KnownSettings = typeof settings
+
 	const defaultSettings = compileDefaultSettingsFromSchema(schema)
+
 	const [isServer, setIsServer] = useState(true)
 
-	const knownSettings = Object.keys(defaultSettings) as (keyof Settings)[]
-	const isKnownSetting = (key: keyof Settings): boolean =>
+	const knownSettings = Object.keys(
+		defaultSettings
+	) as (keyof KnownSettings)[]
+	const isKnownSetting = (key: keyof KnownSettings): boolean =>
 		knownSettings.includes(key)
 
-	const validateSettings = (settingsToValidate: Settings): Settings => {
-		let newSettings: Partial<Settings> = {}
+	const validateSettings = (
+		settingsToValidate: KnownSettings
+	): KnownSettings => {
+		let newSettings: Partial<KnownSettings> = {}
 
 		for (const [key, value] of Object.entries(settingsToValidate)) {
 			const known = isKnownSetting(key)
@@ -39,10 +49,12 @@ export const useAlexandria = (): Alexandria => {
 			}
 		}
 
-		return newSettings as Settings
+		return newSettings as KnownSettings
 	}
 
-	const setWithValidation = (cb: (settings: Settings) => Settings) => {
+	const setWithValidation = (
+		cb: (settings: KnownSettings) => KnownSettings
+	) => {
 		setSettings(settings => validateSettings(cb(settings)))
 	}
 
@@ -71,7 +83,7 @@ export const useAlexandria = (): Alexandria => {
 
 	//////////
 
-	const throwIfUnknownSetting = (key: keyof Settings) => {
+	const throwIfUnknownSetting = (key: keyof KnownSettings) => {
 		if (!isKnownSetting(key)) {
 			throw alexandriaError("unknownSetting", key)
 		}
@@ -79,7 +91,7 @@ export const useAlexandria = (): Alexandria => {
 
 	//////////
 
-	const cycleBetween = (key: keyof Settings, values: string[]) => {
+	const cycleBetween = (key: keyof KnownSettings, values: string[]) => {
 		throwIfUnknownSetting(key)
 
 		const index = values.indexOf(settings[key] as string)
@@ -91,7 +103,7 @@ export const useAlexandria = (): Alexandria => {
 		}))
 	}
 
-	const reset = (key?: keyof Settings) => {
+	const reset = (key?: keyof KnownSettings) => {
 		if (typeof key === "undefined") {
 			setSettings(_ => defaultSettings)
 			return
@@ -105,14 +117,14 @@ export const useAlexandria = (): Alexandria => {
 		}))
 	}
 
-	const set = (key: keyof Settings, value: any) => {
+	const set = (key: keyof KnownSettings, value: any) => {
 		throwIfUnknownSetting(key)
 
 		if (settings[key] === value) return
 		setSettings(settings => validateSettings({ ...settings, [key]: value }))
 	}
 
-	const toggle = (key: keyof Settings) => {
+	const toggle = (key: keyof KnownSettings) => {
 		throwIfUnknownSetting(key)
 		setWithValidation(settings => ({
 			...settings,
@@ -120,7 +132,10 @@ export const useAlexandria = (): Alexandria => {
 		}))
 	}
 
-	const toggleBetween = (key: keyof Settings, values: [string, string]) => {
+	const toggleBetween = (
+		key: keyof KnownSettings,
+		values: [string, string]
+	) => {
 		throwIfUnknownSetting(key)
 		setWithValidation(settings => ({
 			...settings,
@@ -128,9 +143,7 @@ export const useAlexandria = (): Alexandria => {
 		}))
 	}
 
-	const alexandria: Alexandria = {
-		...settings,
-
+	const operatingContext: AlexandriaOperatingContext = {
 		ready: !isServer,
 		cycleBetween,
 		reset,
@@ -139,5 +152,11 @@ export const useAlexandria = (): Alexandria => {
 		toggleBetween,
 	}
 
+	const alexandria: AlexandriaOperatingContext & KnownSettings = {
+		...settings,
+		...operatingContext,
+	}
+
+	// @ts-ignore
 	return alexandria
 }

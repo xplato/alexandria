@@ -4,30 +4,19 @@ import type { AppProps } from "next/app"
 
 import "../styles/jupiterui.css"
 import "../styles/global.css"
+import { Alexandria } from "../logic"
+
+interface Settings {
+	accent: "blue" | "red"
+	darkMode: boolean
+	theme: "light" | "dark" | "system"
+}
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
-		<AlexandriaProvider
-			schema={{
-				accent: {
-					allow: ["blue", "red"],
-					default: "blue",
-				},
-				darkMode: {
-					allow: [true, false],
-					default: false,
-				},
-				theme: {
-					allow: ["light", "dark", "system"],
-					default: "system",
-				},
-			}}
-			config={{
-				key: "alexandria",
-			}}
-		>
+		<Alexandria.Provider>
 			<Component {...pageProps} />
-		</AlexandriaProvider>
+		</Alexandria.Provider>
 	)
 }
 
