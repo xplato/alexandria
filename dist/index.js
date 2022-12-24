@@ -70,6 +70,9 @@ var errors = {
   },
   invalidSchema: function invalidSchema(schema) {
     return "INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: \"" + schema + "\"";
+  },
+  emptySchema: function emptySchema() {
+    return "EMPTY_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is empty. Please provide a schema with at least one setting.";
   }
 };
 var alexandriaError = function alexandriaError(key) {
@@ -112,7 +115,11 @@ var compileDefaultSettingsFromSchema = function compileDefaultSettingsFromSchema
     throw alexandriaError("invalidSchema", schema);
   }
 
-  for (var _i = 0, _Object$entries = Object.entries(schema); _i < _Object$entries.length; _i++) {
+  if (Object.keys(schema || {}).length === 0) {
+    throw alexandriaError("emptySchema");
+  }
+
+  for (var _i = 0, _Object$entries = Object.entries(schema || {}); _i < _Object$entries.length; _i++) {
     var _Object$entries$_i = _Object$entries[_i],
         key = _Object$entries$_i[0],
         value = _Object$entries$_i[1];

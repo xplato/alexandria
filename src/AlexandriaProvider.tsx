@@ -16,7 +16,9 @@ interface Props {
 	children: React.ReactNode
 }
 
-export const AlexandriaProvider = <T extends UnknownSettings = UnknownSettings>({
+export const AlexandriaProvider = <
+	KnownSettings extends UnknownSettings = UnknownSettings
+>({
 	schema,
 	config: userConfig,
 	children,
@@ -26,13 +28,15 @@ export const AlexandriaProvider = <T extends UnknownSettings = UnknownSettings>(
 		...userConfig,
 	}
 
-	const defaultSettings = compileDefaultSettingsFromSchema(schema) as T
+	const defaultSettings = compileDefaultSettingsFromSchema(
+		schema
+	) as KnownSettings
 
-	const loadSettings = (): T => {
+	const loadSettings = (): KnownSettings => {
 		return getSavedObject(config.key, defaultSettings)
 	}
 
-	const [settings, setSettings] = useState<T>(() => {
+	const [settings, setSettings] = useState<KnownSettings>(() => {
 		return {
 			...defaultSettings,
 			...loadSettings(),

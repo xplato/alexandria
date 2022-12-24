@@ -38,7 +38,11 @@ export const compileDefaultSettingsFromSchema = (
 		throw alexandriaError("invalidSchema", schema)
 	}
 
-	for (const [key, value] of Object.entries(schema)) {
+	if (Object.keys(schema || {}).length === 0) {
+		throw alexandriaError("emptySchema")
+	}
+
+	for (const [key, value] of Object.entries(schema || {})) {
 		settings[key] = value.default
 	}
 

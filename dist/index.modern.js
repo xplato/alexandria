@@ -43,7 +43,8 @@ const PREFIX = "Alexandria: ";
 const errors = {
   unknownSetting: key => `UNKNOWN_SETTING_ERROR: "${key}" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.`,
   invalidSettingValue: (key, value, schema) => `INVALID_SETTING_VALUE_ERROR: "${value}" is not an allowed value for setting "${key}". Your mutation has been ignored and the setting was not changed. The current allowed values are: ${schema[key].allow}. If you want to allow any value, set the "allow" property to "*".`,
-  invalidSchema: schema => `INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: "${schema}"`
+  invalidSchema: schema => `INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: "${schema}"`,
+  emptySchema: () => `EMPTY_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is empty. Please provide a schema with at least one setting.`
 };
 const alexandriaError = (key, ...args) => {
   const error = errors[key];
@@ -81,7 +82,11 @@ const compileDefaultSettingsFromSchema = schema => {
     throw alexandriaError("invalidSchema", schema);
   }
 
-  for (const [key, value] of Object.entries(schema)) {
+  if (Object.keys(schema || {}).length === 0) {
+    throw alexandriaError("emptySchema");
+  }
+
+  for (const [key, value] of Object.entries(schema || {})) {
     settings[key] = value.default;
   }
 

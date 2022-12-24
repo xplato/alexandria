@@ -1,6 +1,7 @@
 import React from "react"
 
 import { AlexandriaProvider } from "AlexandriaProvider"
+import { useAlexandria } from "useAlexandria"
 
 import {
 	AlexandriaCreationContext,
@@ -8,7 +9,6 @@ import {
 	Schema,
 	UnknownSettings,
 } from "types"
-import { useAlexandria } from "useAlexandria"
 
 export const createAlexandria = <KnownSettings extends UnknownSettings>(
 	schema: Schema
