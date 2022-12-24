@@ -33,8 +33,3 @@ export interface TAlexandriaContext {
 	schema: Schema
 	config: Config
 }
-
-export interface AlexandriaCreationContext<KnownSettings extends object> {
-	Provider: ({ children }: { children: React.ReactNode }) => JSX.Element
-	Consumer: () => AlexandriaOperatingContext & KnownSettings
-}

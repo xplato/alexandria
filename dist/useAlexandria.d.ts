@@ -1,2 +1,2 @@
-import { AlexandriaOperatingContext, UnknownSettings } from "rtypes";
-export declare const useAlexandria: <KnownSettings extends UnknownSettings = UnknownSettings>() => AlexandriaOperatingContext & KnownSettings;
+import { AlexandriaOperatingContext, UnknownSettings } from "types";
+export declare const useAlexandria: () => AlexandriaOperatingContext & UnknownSettings;

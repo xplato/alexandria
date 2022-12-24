@@ -246,22 +246,5 @@ const useAlexandria = () => {
   return alexandria;
 };
 
-const createAlexandria = schema => {
-  const Provider = ({
-    children
-  }) => React.createElement(AlexandriaProvider, {
-    schema: schema
-  }, children);
-
-  const Consumer = () => {
-    return useAlexandria();
-  };
-
-  return {
-    Provider,
-    Consumer
-  };
-};
-
-export { AlexandriaContext, AlexandriaProvider, createAlexandria, useAlexandria };
+export { AlexandriaContext, AlexandriaProvider, useAlexandria };
 //# sourceMappingURL=index.modern.js.map

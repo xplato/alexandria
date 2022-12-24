@@ -305,26 +305,7 @@ var useAlexandria = function useAlexandria() {
   return alexandria;
 };
 
-var createAlexandria = function createAlexandria(schema) {
-  var Provider = function Provider(_ref) {
-    var children = _ref.children;
-    return React__default.createElement(AlexandriaProvider, {
-      schema: schema
-    }, children);
-  };
-
-  var Consumer = function Consumer() {
-    return useAlexandria();
-  };
-
-  return {
-    Provider: Provider,
-    Consumer: Consumer
-  };
-};
-
 exports.AlexandriaContext = AlexandriaContext;
 exports.AlexandriaProvider = AlexandriaProvider;
-exports.createAlexandria = createAlexandria;
 exports.useAlexandria = useAlexandria;
 //# sourceMappingURL=index.js.map

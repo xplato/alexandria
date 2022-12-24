@@ -1,22 +1,17 @@
 import { AlexandriaProvider } from "@xplato/alexandria"
 
+import { schema } from "../logic"
+
 import type { AppProps } from "next/app"
 
 import "../styles/jupiterui.css"
 import "../styles/global.css"
-import { Alexandria } from "../logic"
-
-interface Settings {
-	accent: "blue" | "red"
-	darkMode: boolean
-	theme: "light" | "dark" | "system"
-}
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
-		<Alexandria.Provider>
+		<AlexandriaProvider schema={schema}>
 			<Component {...pageProps} />
-		</Alexandria.Provider>
+		</AlexandriaProvider>
 	)
 }
 

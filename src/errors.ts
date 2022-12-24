@@ -1,4 +1,4 @@
-import { Schema } from "rtypes"
+import { Schema } from "types"
 
 const PREFIX = "Alexandria: "
 
