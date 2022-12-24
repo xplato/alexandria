@@ -1,3 +1,11 @@
+export interface Alexandria extends Settings {
+	cycleBetween: (key: string, values: string[]) => void
+	reset: (key?: string) => void
+	set: (key: string, value: SettingValue) => void
+	toggle: (key: string) => void
+	toggleBetween: (key: string, values: string[]) => void
+}
+
 export type SettingValue = string | boolean | number | unknown[] | object
 
 export interface Schema {

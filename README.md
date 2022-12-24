@@ -176,17 +176,6 @@ Your settings are spread onto the object returned by `useAlexandria`, so they ca
 alexandria.set("theme", "dark")
 ```
 
-##### `update`
-
-`update` is like `set`, but accepts an object. It then merges this with the existing settings. This is useful for updating multiple settings at once.
-
-```jsx
-alexandria.update({
-  theme: "dark",
-  sessionID: "1111111-1111-1111-1111-111111111111",
-})
-```
-
 ##### `toggle`
 
 `toggle` is used to toggle a setting between `true` and `false`. It accepts a single argument: the setting name.
