@@ -1,3 +1,4 @@
+import { alexandriaError } from "errors"
 import { Schema, SettingValue, UnknownSettings } from "types"
 
 export const isAllowedValue = (
@@ -32,6 +33,10 @@ export const compileDefaultSettingsFromSchema = (
 	schema: Schema
 ): UnknownSettings => {
 	let settings: Partial<UnknownSettings> = {}
+
+	if (typeof schema !== "object") {
+		throw alexandriaError("invalidSchema", schema)
+	}
 
 	for (const [key, value] of Object.entries(schema)) {
 		settings[key] = value.default

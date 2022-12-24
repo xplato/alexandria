@@ -60,6 +60,32 @@ var getSavedObject = function getSavedObject(key, fallback) {
   return value;
 };
 
+var PREFIX = "Alexandria: ";
+var errors = {
+  unknownSetting: function unknownSetting(key) {
+    return "UNKNOWN_SETTING_ERROR: \"" + key + "\" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.";
+  },
+  invalidSettingValue: function invalidSettingValue(key, value, schema) {
+    return "INVALID_SETTING_VALUE_ERROR: \"" + value + "\" is not an allowed value for setting \"" + key + "\". Your mutation has been ignored and the setting was not changed. The current allowed values are: " + schema[key].allow + ". If you want to allow any value, set the \"allow\" property to \"*\".";
+  },
+  invalidSchema: function invalidSchema(schema) {
+    return "INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: \"" + schema + "\"";
+  }
+};
+var alexandriaError = function alexandriaError(key) {
+  var error = errors[key];
+
+  if (typeof error === "undefined") {
+    throw new Error("UNKNOWN_ERROR: " + key);
+  }
+
+  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
+
+  return new Error("" + PREFIX + error.apply(void 0, args));
+};
+
 var isAllowedValue = function isAllowedValue(key, value, schema) {
   var setting = schema[key];
 
@@ -81,6 +107,10 @@ var isAllowedValue = function isAllowedValue(key, value, schema) {
 };
 var compileDefaultSettingsFromSchema = function compileDefaultSettingsFromSchema(schema) {
   var settings = {};
+
+  if (typeof schema !== "object") {
+    throw alexandriaError("invalidSchema", schema);
+  }
 
   for (var _i = 0, _Object$entries = Object.entries(schema); _i < _Object$entries.length; _i++) {
     var _Object$entries$_i = _Object$entries[_i],
@@ -122,29 +152,6 @@ var AlexandriaProvider = function AlexandriaProvider(_ref) {
       config: config
     }
   }, children);
-};
-
-var PREFIX = "Alexandria: ";
-var errors = {
-  unknownSetting: function unknownSetting(key) {
-    return "UNKNOWN_SETTING_ERROR: \"" + key + "\" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.";
-  },
-  invalidSettingValue: function invalidSettingValue(key, value, schema) {
-    return "INVALID_SETTING_VALUE_ERROR: \"" + value + "\" is not an allowed value for setting \"" + key + "\". Your mutation has been ignored and the setting was not changed. The current allowed values are: " + schema[key].allow + ". If you want to allow any value, set the \"allow\" property to \"*\".";
-  }
-};
-var alexandriaError = function alexandriaError(key) {
-  var error = errors[key];
-
-  if (typeof error === "undefined") {
-    throw new Error("UNKNOWN_ERROR: " + key);
-  }
-
-  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
-
-  return new Error("" + PREFIX + error.apply(void 0, args));
 };
 
 var useAlexandria = function useAlexandria() {

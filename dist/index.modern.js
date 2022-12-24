@@ -39,6 +39,22 @@ const getSavedObject = (key, fallback) => {
   return value;
 };
 
+const PREFIX = "Alexandria: ";
+const errors = {
+  unknownSetting: key => `UNKNOWN_SETTING_ERROR: "${key}" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.`,
+  invalidSettingValue: (key, value, schema) => `INVALID_SETTING_VALUE_ERROR: "${value}" is not an allowed value for setting "${key}". Your mutation has been ignored and the setting was not changed. The current allowed values are: ${schema[key].allow}. If you want to allow any value, set the "allow" property to "*".`,
+  invalidSchema: schema => `INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: "${schema}"`
+};
+const alexandriaError = (key, ...args) => {
+  const error = errors[key];
+
+  if (typeof error === "undefined") {
+    throw new Error(`UNKNOWN_ERROR: ${key}`);
+  }
+
+  return new Error(`${PREFIX}${error(...args)}`);
+};
+
 const isAllowedValue = (key, value, schema) => {
   const setting = schema[key];
 
@@ -60,6 +76,10 @@ const isAllowedValue = (key, value, schema) => {
 };
 const compileDefaultSettingsFromSchema = schema => {
   let settings = {};
+
+  if (typeof schema !== "object") {
+    throw alexandriaError("invalidSchema", schema);
+  }
 
   for (const [key, value] of Object.entries(schema)) {
     settings[key] = value.default;
@@ -98,21 +118,6 @@ const AlexandriaProvider = ({
       config
     }
   }, children);
-};
-
-const PREFIX = "Alexandria: ";
-const errors = {
-  unknownSetting: key => `UNKNOWN_SETTING_ERROR: "${key}" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.`,
-  invalidSettingValue: (key, value, schema) => `INVALID_SETTING_VALUE_ERROR: "${value}" is not an allowed value for setting "${key}". Your mutation has been ignored and the setting was not changed. The current allowed values are: ${schema[key].allow}. If you want to allow any value, set the "allow" property to "*".`
-};
-const alexandriaError = (key, ...args) => {
-  const error = errors[key];
-
-  if (typeof error === "undefined") {
-    throw new Error(`UNKNOWN_ERROR: ${key}`);
-  }
-
-  return new Error(`${PREFIX}${error(...args)}`);
 };
 
 const useAlexandria = () => {
