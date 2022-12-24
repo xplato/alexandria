@@ -1,0 +1,22 @@
+{
+	"name": "@xplato/alexandria-demo",
+	"version": "1.0.0",
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@xplato/alexandria": "link:..",
+		"next": "12.2.1",
+		"react": "link:../node_modules/react",
+		"react-dom": "link:../node_modules/react-dom"
+	},
+	"devDependencies": {
+		"@types/node": "18.0.3",
+		"@types/react": "18.0.15",
+		"@types/react-dom": "18.0.6",
+		"typescript": "4.7.4"
+	}
+}
