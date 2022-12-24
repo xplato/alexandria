@@ -12,9 +12,6 @@ export const isAllowedValue = (
 		(typeof setting.allow === "undefined" &&
 			typeof setting.validate === "undefined")
 	) {
-		console.warn(
-			`Alexandria: Setting "${key}" is not defined in the schema.`
-		)
 		return false
 	}
 
@@ -23,12 +20,7 @@ export const isAllowedValue = (
 
 	if (typeof setting.validate === "function") {
 		const valid = setting.validate(value)
-
 		if (valid) return true
-
-		console.warn(
-			`Alexandria: Value "${value}" is not allowed for setting "${key}". Using default value.`
-		)
 		return false
 	}
 

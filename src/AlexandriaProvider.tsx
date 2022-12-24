@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import { SettingsContext } from "context"
+import { AlexandriaContext } from "context"
 import { getSavedObject } from "storage"
 import { compileDefaultSettingsFromSchema } from "logic"
 
@@ -47,7 +47,7 @@ export const AlexandriaProvider = ({
 	}, [])
 
 	return (
-		<SettingsContext.Provider
+		<AlexandriaContext.Provider
 			value={{
 				settings,
 				setSettings,
@@ -56,6 +56,6 @@ export const AlexandriaProvider = ({
 			}}
 		>
 			{children}
-		</SettingsContext.Provider>
+		</AlexandriaContext.Provider>
 	)
 }

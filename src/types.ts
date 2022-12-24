@@ -27,7 +27,7 @@ export interface Config {
 	key: string
 }
 
-export interface AlexandriaContext {
+export interface TAlexandriaContext {
 	settings: Settings
 	setSettings: Dispatch<SetStateAction<Settings>>
 	schema: Schema

@@ -51,6 +51,9 @@ const App = () => (
 const Main = () => {
   const alexandria = useAlexandria()
 
+  // See the SSR section for more details on this
+  if (!alexandria.ready) return null
+
   return (
     <div>
       <h1>Settings</h1>
@@ -85,7 +88,7 @@ There are two primary components: the `AlexandriaProvider` and the `useAlexandri
 
 ### `AlexandriaProvider`
 
-The `AlexandriaProvider` is a React component that wraps your app and provides the `useAlexandria` hook with the settings you want to use. It also handles the automatic validation and persistence to `localStorage`.
+The `AlexandriaProvider` is a React component that wraps your app and provides the `useAlexandria` hook with the settings you want to use. Under the hood, it uses the React Context API.
 
 View the Basic Usage section for an example of how to use it.
 
@@ -141,6 +144,8 @@ View the [type definition](https://github.com/xplato/alexandria/blob/main/src/ty
 
 The config is a small object that allows you to tweak some data/behavior of Alexandria. Right now, it contains a single property: `key`. This is the key used for the settings in `localStorage` (Alexandria uses only one key for all settings).
 
+The default value is `"alexandria"`.
+
 ### `useAlexandria`
 
 The `useAlexandria` hook is what you use to access your settings. It returns a merged object of your settings and some methods for updating them.
@@ -156,12 +161,6 @@ alexandria.set("theme", "dark")
 alexandria.toggleBetween("theme", ["light", "dark"])
 ```
 
-The entire object is given to the provider, so there's no performance benefit to destructuring it. However, if you prefer to do that, you can do so like so:
-
-```jsx
-const { theme, set, toggleBetween } = useAlexandria()
-```
-
 #### Access & Methods
 
 Your settings are spread onto the object returned by `useAlexandria`, so they can be accessed directly. There is no `alexandria.get` method.
@@ -170,10 +169,11 @@ Your settings are spread onto the object returned by `useAlexandria`, so they ca
 
 ##### `set`
 
-`set` is used to set a setting to a specific value. It accepts two arguments: the setting name and the value to set it to.
+`set` is used to set a single setting to a specific value. It accepts two arguments: the setting name and the value to set it to.
 
 ```jsx
 alexandria.set("theme", "dark")
+alexandria.set("openLinksInNewTab", true)
 ```
 
 ##### `toggle`
@@ -209,6 +209,17 @@ alexandria.reset("theme") // theme => "light"
 alexandria.reset() // all settings => their defaults
 ```
 
+##### `ready`
+
+The `ready` property defines when browser-level APIs (`localStorage`) are ready to be used. This is useful for SSR, where you don't want to render your app until the settings are ready.
+
+For more info, see the [SSR section.](#integration-with-ssr)
+
+```jsx
+const alexandria = useAlexandria()
+if (!alexandria.ready) return null
+```
+
 ### Validation
 
 Alexandria uses your schema to perform automatic validation during the initial reading of the user's saved settings and whenever you call a mutating method.
@@ -228,4 +239,18 @@ Alexandria uses `localStorage` to persist your settings. This has a few quirks a
 
 ### Integration with SSR
 
-Technically, there is none. Alexandria just defers working with browser-level APIs until they're available.
+Technically, Alexandria doesn't have any direct integration with SSR. After all, `localStorage` isn't available on the server. Because of this, Alexandria will simply defer execution until browser-level APIs are available. In most cases, this is fine. However, if you have to render settings as textual content on your website, you'll run into hydration issues. This is because Alexandria will render the default values on the server, but the actual values on the client, leading to a mismatch.
+
+To avoid these issues, you can use the `ready` property from the `useAlexandria` hook to defer rendering until the settings are ready. For instance:
+
+```jsx
+const MyComponent = () => {
+  const alexandria = useAlexandria()
+
+  if (!alexandria.ready) {
+    return null
+  }
+
+  return <div>Theme: {alexandria.theme}</div>
+}
+```

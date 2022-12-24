@@ -1,15 +1,15 @@
 import { useContext, useEffect, useState } from "react"
 
-import { SettingsContext } from "context"
+import { AlexandriaContext } from "context"
 import { compileDefaultSettingsFromSchema, isAllowedValue } from "logic"
-import { alexandriaError } from "errors"
 import { getSavedObject, saveObject } from "storage"
+import { alexandriaError } from "errors"
 
 import { Alexandria, Settings } from "types"
 
 export const useAlexandria = (): Alexandria => {
 	const { settings, setSettings, schema, config } =
-		useContext(SettingsContext)
+		useContext(AlexandriaContext)
 	const defaultSettings = compileDefaultSettingsFromSchema(schema)
 	const [isServer, setIsServer] = useState(true)
 
@@ -64,7 +64,6 @@ export const useAlexandria = (): Alexandria => {
 	}, [])
 
 	useEffect(() => {
-		// const validatedSettings = validateSettings(settings)
 		if (JSON.stringify(loadSettings()) !== JSON.stringify(settings)) {
 			saveObject(config.key, settings)
 		}
