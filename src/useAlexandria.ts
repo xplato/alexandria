@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react"
 
-import { AlexandriaContext } from "context"
-import { compileDefaultSettingsFromSchema, isAllowedValue } from "logic"
-import { getSavedObject, saveObject } from "storage"
-import { alexandriaError } from "errors"
+import { AlexandriaContext } from "./context"
+import { compileDefaultSettingsFromSchema, isAllowedValue } from "./logic"
+import { getSavedObject, saveObject } from "./storage"
+import { alexandriaError } from "./errors"
 
-import { AlexandriaOperatingContext, UnknownSettings } from "types"
+import { AlexandriaOperatingContext, UnknownSettings } from "./types"
 
 export const useAlexandria = (): AlexandriaOperatingContext &
 	UnknownSettings => {

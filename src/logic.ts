@@ -1,5 +1,5 @@
-import { alexandriaError } from "errors"
-import { Schema, SettingValue, UnknownSettings } from "types"
+import { alexandriaError } from "./errors"
+import { Schema, SettingValue, UnknownSettings } from "./types"
 
 export const isAllowedValue = (
 	key: string,

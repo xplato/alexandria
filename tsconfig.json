@@ -16,11 +16,7 @@
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
 		"allowSyntheticDefaultImports": true,
-		"downlevelIteration": true,
-		"baseUrl": "./src",
-		"paths": {
-			"src/*": ["./src/*"]
-		}
+		"downlevelIteration": true
 	},
 	"include": ["src"],
 	"exclude": ["node_modules", "dist", "example"]

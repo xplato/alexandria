@@ -1,4 +1,4 @@
-import { Schema } from "types";
+import { Schema } from "./types";
 export declare const errors: {
     unknownSetting: (key: string) => string;
     invalidSettingValue: (key: string, value: string, schema: Schema) => string;
