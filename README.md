@@ -99,7 +99,7 @@ It accepts two props:
 
 #### `schema`
 
-[Go to type definition](https://github.com/xplato/alexandria/blob/main/src/types.ts#L3-L9)
+[Go to type definition](https://github.com/xplato/alexandria/blob/ea9fe4b44685e6c4218864786433462a18ed79b7/src/types.ts#L14)
 
 The schema is an object that defines the structure of all your settings. It is used during validation to ensure the user's settings are in sync with your schema. It also defines the default values for your settings.
 
@@ -136,11 +136,11 @@ const schema = {
 }
 ```
 
-View the [type definition](https://github.com/xplato/alexandria/blob/main/src/types.ts#L3-L9) for more information.
+View the [type definition](https://github.com/xplato/alexandria/blob/ea9fe4b44685e6c4218864786433462a18ed79b7/src/types.ts#L14) for more information.
 
 #### `config`
 
-[Go to type definition](https://github.com/xplato/alexandria/blob/main/src/types.ts#L15-L17)
+[Go to type definition](https://github.com/xplato/alexandria/blob/ea9fe4b44685e6c4218864786433462a18ed79b7/src/types.ts#L26)
 
 The config is a small object that allows you to tweak some data/behavior of Alexandria. Right now, it contains a single property: `key`. This is the key used for the settings in `localStorage` (Alexandria uses only one key for all settings).
 
