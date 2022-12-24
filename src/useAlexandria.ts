@@ -1,35 +1,39 @@
 import { useContext, useEffect, useState } from "react"
 
-import { AlexandriaContext } from "./context"
+import { createAlexandriaContext } from "./context"
 import { compileDefaultSettingsFromSchema, isAllowedValue } from "./logic"
 import { getSavedObject, saveObject } from "./storage"
 import { alexandriaError } from "./errors"
 
-import { AlexandriaOperatingContext, UnknownSettings } from "./types"
+import { AlexandriaOperatingContext, SettingValue } from "./types"
 
-export const useAlexandria = (): AlexandriaOperatingContext &
-	UnknownSettings => {
+export const useAlexandria = <
+	TypedSettings extends {}
+>(): AlexandriaOperatingContext<TypedSettings> & TypedSettings => {
+	const AlexandriaContext = createAlexandriaContext<TypedSettings>()
+
 	const { settings, setSettings, schema, config } =
 		useContext(AlexandriaContext)
 
-	const defaultSettings = compileDefaultSettingsFromSchema(schema)
+	const defaultSettings =
+		compileDefaultSettingsFromSchema<TypedSettings>(schema)
 
 	const [isServer, setIsServer] = useState(true)
 
 	const knownSettings = Object.keys(
 		defaultSettings
-	) as (keyof UnknownSettings)[]
-	const isKnownSetting = (key: keyof UnknownSettings): boolean =>
+	) as (keyof TypedSettings)[]
+	const isKnownSetting = (key: keyof TypedSettings): boolean =>
 		knownSettings.includes(key)
 
 	const validateSettings = (
-		settingsToValidate: UnknownSettings
-	): UnknownSettings => {
-		let newSettings: Partial<UnknownSettings> = {}
+		settingsToValidate: TypedSettings
+	): TypedSettings => {
+		let newSettings: Partial<TypedSettings> = {}
 
 		for (const [key, value] of Object.entries(settingsToValidate)) {
-			const known = isKnownSetting(key)
-			const allowed = isAllowedValue(key, value, schema)
+			const known = isKnownSetting(key as keyof TypedSettings)
+			const allowed = isAllowedValue(key, value as SettingValue, schema)
 
 			if (known) {
 				if (allowed) {
@@ -48,15 +52,13 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 			}
 		}
 
-		return newSettings as UnknownSettings
+		return newSettings as TypedSettings
 	}
 
 	const setWithValidation = (
-		cb: (settings: UnknownSettings) => UnknownSettings
+		cb: (settings: TypedSettings) => TypedSettings
 	) => {
-		setSettings(settings =>
-			validateSettings(cb(settings as UnknownSettings))
-		)
+		setSettings(settings => validateSettings(cb(settings as TypedSettings)))
 	}
 
 	const loadSettings = () => {
@@ -73,7 +75,7 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 			setSettings(defaultSettings)
 		}
 
-		setSettings(validateSettings(savedSettings as UnknownSettings))
+		setSettings(validateSettings(savedSettings as TypedSettings))
 	}, [])
 
 	useEffect(() => {
@@ -84,7 +86,7 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 
 	//////////
 
-	const throwIfUnknownSetting = (key: keyof UnknownSettings) => {
+	const throwIfUnknownSetting = (key: keyof TypedSettings) => {
 		if (!isKnownSetting(key)) {
 			throw alexandriaError("unknownSetting", key)
 		}
@@ -92,7 +94,7 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 
 	//////////
 
-	const cycleBetween = (key: keyof UnknownSettings, values: string[]) => {
+	const cycleBetween = (key: keyof TypedSettings, values: string[]) => {
 		throwIfUnknownSetting(key)
 
 		// @ts-ignore
@@ -105,7 +107,7 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 		}))
 	}
 
-	const reset = (key?: keyof UnknownSettings) => {
+	const reset = (key?: keyof TypedSettings) => {
 		if (typeof key === "undefined") {
 			setSettings(_ => defaultSettings)
 			return
@@ -120,7 +122,7 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 		}))
 	}
 
-	const set = (key: keyof UnknownSettings, value: any) => {
+	const set = (key: keyof TypedSettings, value: any) => {
 		throwIfUnknownSetting(key)
 
 		// @ts-ignore
@@ -129,7 +131,7 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 		setSettings(settings => validateSettings({ ...settings, [key]: value }))
 	}
 
-	const toggle = (key: keyof UnknownSettings) => {
+	const toggle = (key: keyof TypedSettings) => {
 		throwIfUnknownSetting(key)
 		setWithValidation(settings => ({
 			...settings,
@@ -138,17 +140,18 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 	}
 
 	const toggleBetween = (
-		key: keyof UnknownSettings,
+		key: keyof TypedSettings,
 		values: [string, string]
 	) => {
 		throwIfUnknownSetting(key)
 		setWithValidation(settings => ({
 			...settings,
+			// @ts-ignore
 			[key]: settings[key] === values[0] ? values[1] : values[0],
 		}))
 	}
 
-	const operatingContext: AlexandriaOperatingContext = {
+	const operatingContext: AlexandriaOperatingContext<TypedSettings> = {
 		ready: !isServer,
 		cycleBetween,
 		reset,
@@ -157,12 +160,11 @@ export const useAlexandria = (): AlexandriaOperatingContext &
 		toggleBetween,
 	}
 
-	// @ts-ignore
-	const alexandria: AlexandriaOperatingContext & UnknownSettings = {
+	const alexandria: AlexandriaOperatingContext<TypedSettings> &
+		TypedSettings = {
 		...settings,
 		...operatingContext,
 	}
 
-	// @ts-ignore
 	return alexandria
 }

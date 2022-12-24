@@ -1,5 +1,5 @@
 import { alexandriaError } from "./errors"
-import { Schema, SettingValue, UnknownSettings } from "./types"
+import { Schema, SettingValue } from "./types"
 
 export const isAllowedValue = (
 	key: string,
@@ -29,10 +29,10 @@ export const isAllowedValue = (
 	return setting.allow.includes(value as never)
 }
 
-export const compileDefaultSettingsFromSchema = (
+export const compileDefaultSettingsFromSchema = <TypedSettings extends {}>(
 	schema: Schema
-): UnknownSettings => {
-	let settings: Partial<UnknownSettings> = {}
+): TypedSettings => {
+	let settings: Partial<TypedSettings> = {}
 
 	if (typeof schema !== "object") {
 		throw alexandriaError("invalidSchema", schema)
@@ -46,5 +46,5 @@ export const compileDefaultSettingsFromSchema = (
 		settings[key] = value.default
 	}
 
-	return settings as UnknownSettings // Caller is responsible for providing defaults
+	return settings as TypedSettings // Caller is responsible for providing defaults
 }

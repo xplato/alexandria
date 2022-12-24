@@ -5,5 +5,5 @@ interface Props {
     config?: Config;
     children: React.ReactNode;
 }
-export declare const AlexandriaProvider: ({ schema, config: userConfig, children, }: Props) => JSX.Element;
+export declare const AlexandriaProvider: <TypedSettings extends {}>({ schema, config: userConfig, children, }: Props) => JSX.Element;
 export {};

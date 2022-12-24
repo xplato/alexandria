@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction } from "react"
 
-export interface AlexandriaOperatingContext {
+export interface AlexandriaOperatingContext<TypedSettings> {
 	ready: boolean
-	cycleBetween: (key: string, values: string[]) => void
-	reset: (key?: string) => void
-	set: (key: string, value: SettingValue) => void
-	toggle: (key: string) => void
-	toggleBetween: (key: string, values: string[]) => void
+	cycleBetween: (key: keyof TypedSettings, values: string[]) => void
+	reset: (key?: keyof TypedSettings) => void
+	set: (key: keyof TypedSettings, value: SettingValue) => void
+	toggle: (key: keyof TypedSettings) => void
+	toggleBetween: (key: keyof TypedSettings, values: string[]) => void
 }
 
 export type SettingValue = string | boolean | number | unknown[] | object
@@ -27,9 +27,9 @@ export interface Config {
 	key: string
 }
 
-export interface TAlexandriaContext {
-	settings: UnknownSettings
-	setSettings: Dispatch<SetStateAction<UnknownSettings>>
+export interface TAlexandriaContext<TypedSettings> {
+	settings: TypedSettings
+	setSettings: Dispatch<SetStateAction<TypedSettings>>
 	schema: Schema
 	config: Config
 }

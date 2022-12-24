@@ -18,7 +18,9 @@ function _extends() {
   return _extends.apply(this, arguments);
 }
 
-var AlexandriaContext = createContext({});
+var createAlexandriaContext = function createAlexandriaContext() {
+  return createContext({});
+};
 
 var isServer = typeof window === "undefined";
 var saveObject = function saveObject(key, value) {
@@ -136,6 +138,7 @@ var AlexandriaProvider = function AlexandriaProvider(_ref) {
 
   var config = _extends({}, defaultConfig, userConfig);
 
+  var AlexandriaContext = createAlexandriaContext();
   var defaultSettings = compileDefaultSettingsFromSchema(schema);
 
   var loadSettings = function loadSettings() {
@@ -159,6 +162,8 @@ var AlexandriaProvider = function AlexandriaProvider(_ref) {
 };
 
 var useAlexandria = function useAlexandria() {
+  var AlexandriaContext = createAlexandriaContext();
+
   var _useContext = useContext(AlexandriaContext),
       settings = _useContext.settings,
       setSettings = _useContext.setSettings,
@@ -302,5 +307,23 @@ var useAlexandria = function useAlexandria() {
   return alexandria;
 };
 
-export { AlexandriaContext, AlexandriaProvider, useAlexandria };
+var createAlexandria = function createAlexandria(schema) {
+  var Provider = function Provider(_ref) {
+    var children = _ref.children;
+    return React.createElement(AlexandriaProvider, {
+      schema: schema
+    }, children);
+  };
+
+  var Consumer = function Consumer() {
+    return useAlexandria();
+  };
+
+  return {
+    Provider: Provider,
+    Consumer: Consumer
+  };
+};
+
+export { AlexandriaProvider, createAlexandria, createAlexandriaContext, useAlexandria };
 //# sourceMappingURL=index.modern.js.map

@@ -1,10 +1,10 @@
 import React, { useState } from "react"
 
-import { AlexandriaContext } from "./context"
+import { createAlexandriaContext } from "./context"
 import { getSavedObject } from "./storage"
 import { compileDefaultSettingsFromSchema } from "./logic"
 
-import type { Config, Schema, UnknownSettings } from "./types"
+import type { Config, Schema } from "./types"
 
 const defaultConfig: Config = {
 	key: "alexandria",
@@ -16,7 +16,7 @@ interface Props {
 	children: React.ReactNode
 }
 
-export const AlexandriaProvider = ({
+export const AlexandriaProvider = <TypedSettings extends {}>({
 	schema,
 	config: userConfig,
 	children,
@@ -26,15 +26,17 @@ export const AlexandriaProvider = ({
 		...userConfig,
 	}
 
+	const AlexandriaContext = createAlexandriaContext<TypedSettings>()
+
 	const defaultSettings = compileDefaultSettingsFromSchema(
 		schema
-	) as UnknownSettings
+	) as TypedSettings
 
-	const loadSettings = (): UnknownSettings => {
+	const loadSettings = (): TypedSettings => {
 		return getSavedObject(config.key, defaultSettings)
 	}
 
-	const [settings, setSettings] = useState<UnknownSettings>(() => {
+	const [settings, setSettings] = useState<TypedSettings>(() => {
 		return {
 			...defaultSettings,
 			...loadSettings(),
