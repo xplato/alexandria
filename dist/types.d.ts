@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
-export interface Alexandria extends Settings {
+export interface AlexandriaOperatingContext {
+    ready: boolean;
     cycleBetween: (key: string, values: string[]) => void;
     reset: (key?: string) => void;
     set: (key: string, value: SettingValue) => void;
@@ -14,15 +15,15 @@ export interface Schema {
         default: SettingValue;
     };
 }
-export interface Settings {
+export interface UnknownSettings {
     [key: string]: SettingValue;
 }
 export interface Config {
     key: string;
 }
-export interface AlexandriaContext {
-    settings: Settings;
-    setSettings: Dispatch<SetStateAction<Settings>>;
+export interface TAlexandriaContext {
+    settings: UnknownSettings;
+    setSettings: Dispatch<SetStateAction<UnknownSettings>>;
     schema: Schema;
     config: Config;
 }
