@@ -28,7 +28,7 @@ export const AlexandriaProvider = <TypedSettings extends {}>({
 
 	const AlexandriaContext = createAlexandriaContext<TypedSettings>()
 
-	const defaultSettings = compileDefaultSettingsFromSchema(
+	const defaultSettings = compileDefaultSettingsFromSchema<TypedSettings>(
 		schema
 	) as TypedSettings
 

@@ -12,12 +12,12 @@ export const createAlexandria = <TypedSettings extends {}>(schema: Schema) => {
 		</AlexandriaProvider>
 	)
 
-	const Consumer = () => {
+	const useConsumer = () => {
 		return useAlexandria<TypedSettings>()
 	}
 
 	return {
 		Provider,
-		Consumer,
+		useConsumer,
 	}
 }

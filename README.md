@@ -20,7 +20,7 @@ Then, use it:
 
 ```jsx
 // Import Alexandria
-import { AlexandriaProvider, useAlexandria } from "@xplato/alexandria"
+import { AlexandriaProvider, useAlexandria } from "./alexandria" // read docs for why this is local
 
 // Define your settings schema
 const schema = {
@@ -82,9 +82,72 @@ const Main = () => {
 }
 ```
 
+Please read the documentation below for more information, espescially the usage methods section.
+
 ## Documentation
 
 There are two primary components: the `AlexandriaProvider` and the `useAlexandria` hook.
+
+### Usage
+
+To make Alexandria fully-typed, you must manually create the provider and consumer with the `createAlexandria` function. This is so that you can pass the type argument to one function once instead of doing it manually every time you use the provider or hook.
+
+```jsx
+// lib/alexandria.ts
+import { createAlexandria } from "@xplato/alexandria"
+
+interface Settings {
+  // ...
+}
+
+const schema = {
+  // ...
+}
+
+const Alexandria = createAlexandria<Settings>(schema)
+export const AlexandriaProvider = Alexandria.Provider
+export const useAlexandria = Alexandria.useConsumer
+```
+
+Then, to use them:
+
+```jsx
+import { AlexandriaProvider, useAlexandria } from "./lib/alexandria"
+
+const App = () => (
+  <AlexandriaProvider>
+    <Main />
+  </AlexandriaProvider>
+)
+
+const Main = () => {
+  const alexandria = useAlexandria()
+
+  // ...
+}
+```
+
+If you don't want to use `createAlexandria` or if your project uses plain JS, you can just use the default exports.
+
+```jsx
+import { AlexandriaProvider, useAlexandria } from "@xplato/alexandria"
+
+interface MySettings {
+  // ...
+}
+
+const TypedUsage = () => (
+  <AlexandriaProvider<MySettings> schema={schema}>
+    <Main />
+  </AlexandriaProvider>
+)
+
+const PlainUsage = () => (
+  <AlexandriaProvider schema={schema}>
+    <Main />
+  </AlexandriaProvider>
+)
+```
 
 ### `AlexandriaProvider`
 

@@ -1,38 +1,20 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 
-function _extends() {
-  _extends = Object.assign || function (target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i];
-
-      for (var key in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key)) {
-          target[key] = source[key];
-        }
-      }
-    }
-
-    return target;
-  };
-
-  return _extends.apply(this, arguments);
-}
-
-var createAlexandriaContext = function createAlexandriaContext() {
+const createAlexandriaContext = () => {
   return createContext({});
 };
 
-var isServer = typeof window === "undefined";
-var saveObject = function saveObject(key, value) {
+const isServer = typeof window === "undefined";
+const saveObject = (key, value) => {
   if (isServer) return;
 
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (e) {}
 };
-var getBlob = function getBlob(key) {
+const getBlob = key => {
   if (isServer) return undefined;
-  var blob;
+  let blob;
 
   try {
     blob = localStorage.getItem(key) || undefined;
@@ -40,15 +22,15 @@ var getBlob = function getBlob(key) {
 
   return blob || undefined;
 };
-var getSavedObject = function getSavedObject(key, fallback) {
-  var blob = getBlob(key);
+const getSavedObject = (key, fallback) => {
+  const blob = getBlob(key);
 
   if (typeof blob === "undefined") {
     saveObject(key, fallback);
     return fallback;
   }
 
-  var value = fallback;
+  let value = fallback;
 
   try {
     value = JSON.parse(blob);
@@ -59,37 +41,25 @@ var getSavedObject = function getSavedObject(key, fallback) {
   return value;
 };
 
-var PREFIX = "Alexandria: ";
-var errors = {
-  unknownSetting: function unknownSetting(key) {
-    return "UNKNOWN_SETTING_ERROR: \"" + key + "\" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.";
-  },
-  invalidSettingValue: function invalidSettingValue(key, value, schema) {
-    return "INVALID_SETTING_VALUE_ERROR: \"" + value + "\" is not an allowed value for setting \"" + key + "\". Your mutation has been ignored and the setting was not changed. The current allowed values are: " + schema[key].allow + ". If you want to allow any value, set the \"allow\" property to \"*\".";
-  },
-  invalidSchema: function invalidSchema(schema) {
-    return "INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: \"" + schema + "\"";
-  },
-  emptySchema: function emptySchema() {
-    return "EMPTY_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is empty. Please provide a schema with at least one setting.";
-  }
+const PREFIX = "Alexandria: ";
+const errors = {
+  unknownSetting: key => `UNKNOWN_SETTING_ERROR: "${key}" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.`,
+  invalidSettingValue: (key, value, schema) => `INVALID_SETTING_VALUE_ERROR: "${value}" is not an allowed value for setting "${key}". Your mutation has been ignored and the setting was not changed. The current allowed values are: ${schema[key].allow}. If you want to allow any value, set the "allow" property to "*".`,
+  invalidSchema: schema => `INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: "${schema}"`,
+  emptySchema: () => `EMPTY_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is empty. Please provide a schema with at least one setting.`
 };
-var alexandriaError = function alexandriaError(key) {
-  var error = errors[key];
+const alexandriaError = (key, ...args) => {
+  const error = errors[key];
 
   if (typeof error === "undefined") {
-    throw new Error("UNKNOWN_ERROR: " + key);
+    throw new Error(`UNKNOWN_ERROR: ${key}`);
   }
 
-  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
-
-  return new Error("" + PREFIX + error.apply(void 0, args));
+  return new Error(`${PREFIX}${error(...args)}`);
 };
 
-var isAllowedValue = function isAllowedValue(key, value, schema) {
-  var setting = schema[key];
+const isAllowedValue = (key, value, schema) => {
+  const setting = schema[key];
 
   if (typeof setting === "undefined" || typeof setting.allow === "undefined" && typeof setting.validate === "undefined") {
     return false;
@@ -99,7 +69,7 @@ var isAllowedValue = function isAllowedValue(key, value, schema) {
   if (setting.allow === "*") return true;
 
   if (typeof setting.validate === "function") {
-    var valid = setting.validate(value);
+    const valid = setting.validate(value);
     if (valid) return true;
     return false;
   }
@@ -107,8 +77,8 @@ var isAllowedValue = function isAllowedValue(key, value, schema) {
   if (typeof setting.allow === "undefined") return false;
   return setting.allow.includes(value);
 };
-var compileDefaultSettingsFromSchema = function compileDefaultSettingsFromSchema(schema) {
-  var settings = {};
+const compileDefaultSettingsFromSchema = schema => {
+  let settings = {};
 
   if (typeof schema !== "object") {
     throw alexandriaError("invalidSchema", schema);
@@ -118,79 +88,71 @@ var compileDefaultSettingsFromSchema = function compileDefaultSettingsFromSchema
     throw alexandriaError("emptySchema");
   }
 
-  for (var _i = 0, _Object$entries = Object.entries(schema || {}); _i < _Object$entries.length; _i++) {
-    var _Object$entries$_i = _Object$entries[_i],
-        key = _Object$entries$_i[0],
-        value = _Object$entries$_i[1];
-    settings[key] = value["default"];
+  for (const [key, value] of Object.entries(schema || {})) {
+    settings[key] = value.default;
   }
 
   return settings;
 };
 
-var defaultConfig = {
+const defaultConfig = {
   key: "alexandria"
 };
-var AlexandriaProvider = function AlexandriaProvider(_ref) {
-  var schema = _ref.schema,
-      userConfig = _ref.config,
-      children = _ref.children;
+const AlexandriaProvider = ({
+  schema,
+  config: userConfig,
+  children
+}) => {
+  const config = { ...defaultConfig,
+    ...userConfig
+  };
+  const AlexandriaContext = createAlexandriaContext();
+  const defaultSettings = compileDefaultSettingsFromSchema(schema);
 
-  var config = _extends({}, defaultConfig, userConfig);
-
-  var AlexandriaContext = createAlexandriaContext();
-  var defaultSettings = compileDefaultSettingsFromSchema(schema);
-
-  var loadSettings = function loadSettings() {
+  const loadSettings = () => {
     return getSavedObject(config.key, defaultSettings);
   };
 
-  var _useState = useState(function () {
-    return _extends({}, defaultSettings, loadSettings());
-  }),
-      settings = _useState[0],
-      setSettings = _useState[1];
-
+  const [settings, setSettings] = useState(() => {
+    return { ...defaultSettings,
+      ...loadSettings()
+    };
+  });
   return React.createElement(AlexandriaContext.Provider, {
     value: {
-      settings: settings,
-      setSettings: setSettings,
-      schema: schema,
-      config: config
+      settings,
+      setSettings,
+      schema,
+      config
     }
   }, children);
 };
 
-var useAlexandria = function useAlexandria() {
-  var AlexandriaContext = createAlexandriaContext();
+const useAlexandria = () => {
+  const AlexandriaContext = createAlexandriaContext();
+  const {
+    settings,
+    setSettings,
+    schema,
+    config
+  } = useContext(AlexandriaContext);
 
-  var _useContext = useContext(AlexandriaContext),
-      settings = _useContext.settings,
-      setSettings = _useContext.setSettings,
-      schema = _useContext.schema,
-      config = _useContext.config;
+  if (!schema) {
+    return {};
+  }
 
-  var defaultSettings = compileDefaultSettingsFromSchema(schema);
+  const defaultSettings = compileDefaultSettingsFromSchema(schema);
+  const [isServer, setIsServer] = useState(true);
+  const knownSettings = Object.keys(defaultSettings);
 
-  var _useState = useState(true),
-      isServer = _useState[0],
-      setIsServer = _useState[1];
+  const isKnownSetting = key => knownSettings.includes(key);
 
-  var knownSettings = Object.keys(defaultSettings);
+  const validateSettings = settingsToValidate => {
+    let newSettings = {};
 
-  var isKnownSetting = function isKnownSetting(key) {
-    return knownSettings.includes(key);
-  };
-
-  var validateSettings = function validateSettings(settingsToValidate) {
-    var newSettings = {};
-
-    for (var _i = 0, _Object$entries = Object.entries(settingsToValidate); _i < _Object$entries.length; _i++) {
-      var _Object$entries$_i = _Object$entries[_i],
-          key = _Object$entries$_i[0],
-          value = _Object$entries$_i[1];
-      var known = isKnownSetting(key);
-      var allowed = isAllowedValue(key, value, schema);
+    for (const [key, value] of Object.entries(settingsToValidate)) {
+      const known = isKnownSetting(key);
+      const allowed = isAllowedValue(key, value, schema);
 
       if (known) {
         if (allowed) {
@@ -205,20 +167,18 @@ var useAlexandria = function useAlexandria() {
     return newSettings;
   };
 
-  var setWithValidation = function setWithValidation(cb) {
-    setSettings(function (settings) {
-      return validateSettings(cb(settings));
-    });
+  const setWithValidation = cb => {
+    setSettings(settings => validateSettings(cb(settings)));
   };
 
-  var loadSettings = function loadSettings() {
+  const loadSettings = () => {
     return getSavedObject(config.key, defaultSettings);
   };
 
-  useEffect(function () {
+  useEffect(() => {
     if (!window.localStorage) return;
     setIsServer(false);
-    var savedSettings = loadSettings();
+    const savedSettings = loadSettings();
 
     if (Object.keys(savedSettings).length === 0) {
       setSettings(defaultSettings);
@@ -226,102 +186,89 @@ var useAlexandria = function useAlexandria() {
 
     setSettings(validateSettings(savedSettings));
   }, []);
-  useEffect(function () {
+  useEffect(() => {
     if (JSON.stringify(loadSettings()) !== JSON.stringify(settings)) {
       saveObject(config.key, settings);
     }
   }, [settings]);
 
-  var throwIfUnknownSetting = function throwIfUnknownSetting(key) {
+  const throwIfUnknownSetting = key => {
     if (!isKnownSetting(key)) {
       throw alexandriaError("unknownSetting", key);
     }
   };
 
-  var cycleBetween = function cycleBetween(key, values) {
+  const cycleBetween = (key, values) => {
     throwIfUnknownSetting(key);
-    var index = values.indexOf(settings[key]);
-    var nextIndex = index === values.length - 1 ? 0 : index + 1;
-    setWithValidation(function (settings) {
-      var _extends2;
-
-      return _extends({}, settings, (_extends2 = {}, _extends2[key] = values[nextIndex], _extends2));
-    });
+    const index = values.indexOf(settings[key]);
+    const nextIndex = index === values.length - 1 ? 0 : index + 1;
+    setWithValidation(settings => ({ ...settings,
+      [key]: values[nextIndex]
+    }));
   };
 
-  var reset = function reset(key) {
+  const reset = key => {
     if (typeof key === "undefined") {
-      setSettings(function (_) {
-        return defaultSettings;
-      });
+      setSettings(_ => defaultSettings);
       return;
     }
 
     throwIfUnknownSetting(key);
-    setWithValidation(function (settings) {
-      var _extends3;
-
-      return _extends({}, settings, (_extends3 = {}, _extends3[key] = defaultSettings[key], _extends3));
-    });
+    setWithValidation(settings => ({ ...settings,
+      [key]: defaultSettings[key]
+    }));
   };
 
-  var set = function set(key, value) {
+  const set = (key, value) => {
     throwIfUnknownSetting(key);
     if (settings[key] === value) return;
-    setSettings(function (settings) {
-      var _extends4;
-
-      return validateSettings(_extends({}, settings, (_extends4 = {}, _extends4[key] = value, _extends4)));
-    });
+    setSettings(settings => validateSettings({ ...settings,
+      [key]: value
+    }));
   };
 
-  var toggle = function toggle(key) {
+  const toggle = key => {
     throwIfUnknownSetting(key);
-    setWithValidation(function (settings) {
-      var _extends5;
-
-      return _extends({}, settings, (_extends5 = {}, _extends5[key] = !settings[key], _extends5));
-    });
+    setWithValidation(settings => ({ ...settings,
+      [key]: !settings[key]
+    }));
   };
 
-  var toggleBetween = function toggleBetween(key, values) {
+  const toggleBetween = (key, values) => {
     throwIfUnknownSetting(key);
-    setWithValidation(function (settings) {
-      var _extends6;
-
-      return _extends({}, settings, (_extends6 = {}, _extends6[key] = settings[key] === values[0] ? values[1] : values[0], _extends6));
-    });
+    setWithValidation(settings => ({ ...settings,
+      [key]: settings[key] === values[0] ? values[1] : values[0]
+    }));
   };
 
-  var operatingContext = {
+  const operatingContext = {
     ready: !isServer,
-    cycleBetween: cycleBetween,
-    reset: reset,
-    set: set,
-    toggle: toggle,
-    toggleBetween: toggleBetween
+    cycleBetween,
+    reset,
+    set,
+    toggle,
+    toggleBetween
   };
-
-  var alexandria = _extends({}, settings, operatingContext);
-
+  const alexandria = { ...settings,
+    ...operatingContext
+  };
   return alexandria;
 };
 
-var createAlexandria = function createAlexandria(schema) {
-  var Provider = function Provider(_ref) {
-    var children = _ref.children;
-    return React.createElement(AlexandriaProvider, {
-      schema: schema
-    }, children);
-  };
+const createAlexandria = schema => {
+  const Provider = ({
+    children
+  }) => React.createElement(AlexandriaProvider, {
+    schema: schema
+  }, children);
 
-  var Consumer = function Consumer() {
+  const useConsumer = () => {
     return useAlexandria();
   };
 
   return {
-    Provider: Provider,
-    Consumer: Consumer
+    Provider,
+    useConsumer
   };
 };
 

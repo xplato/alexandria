@@ -15,6 +15,10 @@ export const useAlexandria = <
 	const { settings, setSettings, schema, config } =
 		useContext(AlexandriaContext)
 
+	if (!schema) {
+		return {} as never
+	}
+
 	const defaultSettings =
 		compileDefaultSettingsFromSchema<TypedSettings>(schema)
 

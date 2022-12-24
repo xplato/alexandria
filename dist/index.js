@@ -173,6 +173,10 @@ var useAlexandria = function useAlexandria() {
       schema = _useContext.schema,
       config = _useContext.config;
 
+  if (!schema) {
+    return {};
+  }
+
   var defaultSettings = compileDefaultSettingsFromSchema(schema);
 
   var _useState = React.useState(true),
@@ -318,13 +322,13 @@ var createAlexandria = function createAlexandria(schema) {
     }, children);
   };
 
-  var Consumer = function Consumer() {
+  var useConsumer = function useConsumer() {
     return useAlexandria();
   };
 
   return {
     Provider: Provider,
-    Consumer: Consumer
+    useConsumer: useConsumer
   };
 };
 
