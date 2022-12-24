@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react"
 
 export interface Alexandria extends Settings {
+	ready: boolean
 	cycleBetween: (key: string, values: string[]) => void
 	reset: (key?: string) => void
 	set: (key: string, value: SettingValue) => void
