@@ -27,7 +27,6 @@ export const createAlexandria = <KnownSettings extends UnknownSettings>(
 
 	return {
 		Provider,
-		// @ts-ignore
 		Consumer,
 	}
 }
