@@ -1,9 +1,11 @@
 {
 	"name": "@xplato/alexandria",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"author": "xplato <xplato@infi.im>",
 	"license": "MIT",
 	"repository": "https://github.com/xplato/alexandria",
+	"description": "Lightweight React wrapper of `localStorage` for declarative management of user preferences and settings.",
+	"keywords": ["localStorage", "settings", "typescript"],
 	"main": "dist/index.js",
 	"module": "dist/index.modern.js",
 	"source": "src/index.ts",
