@@ -1,4 +1,4 @@
-const isServer = typeof window === "undefined"
+export const isServer = typeof window === "undefined"
 
 export const saveObject = <T>(key: string, value: T): void => {
 	if (isServer) return
@@ -32,5 +32,14 @@ export const getSavedObject = <T>(key: string, fallback: T): T => {
 		return fallback
 	}
 
-	return JSON.parse(blob)
+	let value: T = fallback
+
+	try {
+		value = JSON.parse(blob) as T
+	} catch (e) {
+		// Invalid
+		saveObject(key, "{}")
+	}
+
+	return value
 }
