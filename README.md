@@ -24,58 +24,58 @@ import { AlexandriaProvider, useAlexandria } from "@xplato/alexandria"
 
 // Define your settings schema
 const schema = {
-	theme: {
-		allow: ["light", "dark"],
-		default: "light",
-	},
-	sessionID: {
-		validate: value => isUUID(value), // an imperative alternative to setting `allow`
-		default: "00000000-0000-0000-0000-000000000000",
-	},
+  theme: {
+    allow: ["light", "dark"],
+    default: "light",
+  },
+  sessionID: {
+    validate: value => isUUID(value), // an imperative alternative to setting `allow`
+    default: "00000000-0000-0000-0000-000000000000",
+  },
 }
 
 // Define your config (optional)
 const config = {
-	// They primary localStorage key
-	key: "alexandria", // default
+  // They primary localStorage key
+  key: "alexandria", // default
 }
 
 // Wrap your app with the AlexandriaProvider
 const App = () => (
-	<AlexandriaProvider schema={schema} config={config}>
-		<Main />
-	</AlexandriaProvider>
+  <AlexandriaProvider schema={schema} config={config}>
+    <Main />
+  </AlexandriaProvider>
 )
 
 // Use the useAlexandria hook to access your settings
 const Main = () => {
-	const alexandria = useAlexandria()
+  const alexandria = useAlexandria()
 
-	return (
-		<div>
-			<h1>Settings</h1>
-			<p>Theme: {alexandria.theme}</p>
-			<p>Session ID: {alexandria.sessionID}</p>
+  return (
+    <div>
+      <h1>Settings</h1>
+      <p>Theme: {alexandria.theme}</p>
+      <p>Session ID: {alexandria.sessionID}</p>
 
-			<button
-				onClick={() =>
-					alexandria.toggleBetween("theme", ["light", "dark"])
-				}
-			>
-				Toggle theme
-			</button>
-			<button
-				onClick={() =>
-					alexandria.set(
-						"sessionID",
-						"1111111-1111-1111-1111-111111111111"
-					)
-				}
-			>
-				Reset session ID
-			</button>
-		</div>
-	)
+      <button
+        onClick={() =>
+          alexandria.toggleBetween("theme", ["light", "dark"])
+        }
+      >
+        Toggle theme
+      </button>
+      <button
+        onClick={() =>
+          alexandria.set(
+            "sessionID",
+            "1111111-1111-1111-1111-111111111111"
+          )
+        }
+      >
+        Reset session ID
+      </button>
+    </div>
+  )
 }
 ```
 
@@ -104,10 +104,10 @@ As an example, let's say you want to store a user's theme preference. You could 
 
 ```jsx
 const schema = {
-	theme: {
-		allow: ["light", "dark"],
-		default: "light",
-	},
+  theme: {
+    allow: ["light", "dark"],
+    default: "light",
+  },
 }
 ```
 
@@ -115,10 +115,10 @@ In a lot of cases, you'll know ahead of time what values your settings can be. S
 
 ```jsx
 const schema = {
-	accent: {
-		allow: "*",
-		default: "#3452ff",
-	},
+  accent: {
+    allow: "*",
+    default: "#3452ff",
+  },
 }
 ```
 
@@ -126,10 +126,10 @@ Better yet, you can alternatively define a `validate` function to perform more c
 
 ```jsx
 const schema = {
-	accent: {
-		validate: value => /^#[0-9a-f]{6}$/i.test(value),
-		default: "#3452ff",
-	},
+  accent: {
+    validate: value => /^#[0-9a-f]{6}$/i.test(value),
+    default: "#3452ff",
+  },
 }
 ```
 
@@ -182,8 +182,8 @@ alexandria.set("theme", "dark")
 
 ```jsx
 alexandria.update({
-	theme: "dark",
-	sessionID: "1111111-1111-1111-1111-111111111111",
+  theme: "dark",
+  sessionID: "1111111-1111-1111-1111-111111111111",
 })
 ```
 
