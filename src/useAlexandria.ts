@@ -8,12 +8,12 @@ import { alexandriaError } from "errors"
 import { AlexandriaOperatingContext, UnknownSettings } from "rtypes"
 
 export const useAlexandria = <
-	T extends UnknownSettings = UnknownSettings
->(): AlexandriaOperatingContext & T => {
+	KnownSettings extends UnknownSettings = UnknownSettings
+>(): AlexandriaOperatingContext & KnownSettings => {
 	const { settings, setSettings, schema, config } =
 		useContext(AlexandriaContext)
 
-	type KnownSettings = typeof settings
+	// type KnownSettings = typeof settings
 
 	const defaultSettings = compileDefaultSettingsFromSchema(schema)
 
@@ -36,8 +36,10 @@ export const useAlexandria = <
 
 			if (known) {
 				if (allowed) {
+					// @ts-ignore
 					newSettings[key] = value as never
 				} else {
+					// @ts-ignore
 					newSettings[key] = settings[key]
 					throw alexandriaError(
 						"invalidSettingValue",
@@ -55,7 +57,7 @@ export const useAlexandria = <
 	const setWithValidation = (
 		cb: (settings: KnownSettings) => KnownSettings
 	) => {
-		setSettings(settings => validateSettings(cb(settings)))
+		setSettings(settings => validateSettings(cb(settings as KnownSettings)))
 	}
 
 	const loadSettings = () => {
@@ -72,7 +74,7 @@ export const useAlexandria = <
 			setSettings(defaultSettings)
 		}
 
-		setSettings(validateSettings(savedSettings))
+		setSettings(validateSettings(savedSettings as KnownSettings))
 	}, [])
 
 	useEffect(() => {
@@ -94,6 +96,7 @@ export const useAlexandria = <
 	const cycleBetween = (key: keyof KnownSettings, values: string[]) => {
 		throwIfUnknownSetting(key)
 
+		// @ts-ignore
 		const index = values.indexOf(settings[key] as string)
 		const nextIndex = index === values.length - 1 ? 0 : index + 1
 
@@ -113,6 +116,7 @@ export const useAlexandria = <
 
 		setWithValidation(settings => ({
 			...settings,
+			// @ts-ignore
 			[key]: defaultSettings[key],
 		}))
 	}
@@ -120,7 +124,9 @@ export const useAlexandria = <
 	const set = (key: keyof KnownSettings, value: any) => {
 		throwIfUnknownSetting(key)
 
+		// @ts-ignore
 		if (settings[key] === value) return
+		// @ts-ignore
 		setSettings(settings => validateSettings({ ...settings, [key]: value }))
 	}
 
@@ -152,6 +158,7 @@ export const useAlexandria = <
 		toggleBetween,
 	}
 
+	// @ts-ignore
 	const alexandria: AlexandriaOperatingContext & KnownSettings = {
 		...settings,
 		...operatingContext,
