@@ -10,7 +10,7 @@ export const errors = {
 		value: string,
 		schema: AlexandriaSchema
 	): string =>
-		`INVALID_SETTING_VALUE_ERROR: "${value}" is not an allowed value for setting "${key}". Your mutation has been ignored and the setting was not changed. The current allowed values are: ${schema[key].allow}. If you want to allow any value, set the "allow" property to "*".`,
+		`INVALID_SETTING_VALUE_ERROR: "${value}" is not an allowed value for setting "${key}". The setting was reset to the default value. The current allowed values are: ${schema[key].allow}. If you want to allow any value, set the "allow" property to "*".`,
 	invalidSchema: (schema: unknown): string =>
 		`INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: "${schema}"`,
 	emptySchema: (): string =>

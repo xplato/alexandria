@@ -56,7 +56,7 @@ var errors = {
     return "UNKNOWN_SETTING_ERROR: \"" + key + "\" is not a valid setting. If it should be, please update your schema in the AlexandriaProvider. Your mutation has been ignored and the setting was not changed.";
   },
   invalidSettingValue: function invalidSettingValue(key, value, schema) {
-    return "INVALID_SETTING_VALUE_ERROR: \"" + value + "\" is not an allowed value for setting \"" + key + "\". Your mutation has been ignored and the setting was not changed. The current allowed values are: " + schema[key].allow + ". If you want to allow any value, set the \"allow\" property to \"*\".";
+    return "INVALID_SETTING_VALUE_ERROR: \"" + value + "\" is not an allowed value for setting \"" + key + "\". The setting was reset to the default value. The current allowed values are: " + schema[key].allow + ". If you want to allow any value, set the \"allow\" property to \"*\".";
   },
   invalidSchema: function invalidSchema(schema) {
     return "INVALID_SCHEMA_ERROR: The schema provided to the AlexandriaProvider is invalid. Got: \"" + schema + "\"";
@@ -161,8 +161,8 @@ var useAlexandria = function useAlexandria() {
         if (allowed) {
           newSettings[key] = value;
         } else {
-          newSettings[key] = settings[key];
-          throw alexandriaError("invalidSettingValue", key, value, schema);
+          newSettings[key] = schema[key]["default"];
+          console.warn(alexandriaError("invalidSettingValue", key, value, schema));
         }
       }
     }
@@ -251,11 +251,12 @@ var useAlexandria = function useAlexandria() {
   return alexandria;
 };
 
-var createAlexandria = function createAlexandria(schema) {
+var createAlexandria = function createAlexandria(schema, config) {
   var Provider = function Provider(_ref) {
     var children = _ref.children;
     return React__default.createElement(AlexandriaProvider, {
-      schema: schema
+      schema: schema,
+      config: config
     }, children);
   };
   var useConsumer = function useConsumer() {

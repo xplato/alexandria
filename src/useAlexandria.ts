@@ -45,12 +45,14 @@ export const useAlexandria = <
 				if (allowed) {
 					newSettings[key] = value as never
 				} else {
-					newSettings[key] = settings[key]
-					throw alexandriaError(
-						"invalidSettingValue",
-						key,
-						value,
-						schema
+					newSettings[key] = schema[key].default
+					console.warn(
+						alexandriaError(
+							"invalidSettingValue",
+							key,
+							value,
+							schema
+						)
 					)
 				}
 			}

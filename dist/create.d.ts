@@ -1,6 +1,6 @@
 import React from "react";
-import { AlexandriaSchema } from "./types";
-export declare const createAlexandria: <TypedSettings extends {}>(schema: AlexandriaSchema) => {
+import { AlexandriaConfig, AlexandriaSchema } from "./types";
+export declare const createAlexandria: <TypedSettings extends {}>(schema: AlexandriaSchema, config?: AlexandriaConfig | undefined) => {
     Provider: ({ children }: {
         children: React.ReactNode;
     }) => JSX.Element;

@@ -2,7 +2,7 @@ import { createAlexandria } from "@xplato/alexandria"
 import { schema } from "./schema"
 
 interface Settings {
-	color: "blue" | "red"
+	count: number
 	isDark: boolean
 }
 

@@ -3,13 +3,13 @@ import { useAlexandria } from "../logic"
 const Home = () => {
 	const alexandria = useAlexandria()
 
-	const onButton1Click = () => {
-		alexandria.set("color", "blue")
-	}
+	const decrement = () => {
+    alexandria.set("count", alexandria.count - 1)
+  }
 
-	const onButton2Click = () => {
-		alexandria.toggleBetween("color", ["blue", "red"])
-	}
+	const increment = () => {
+    alexandria.set("count", alexandria.count + 1)
+  }
 
 	if (!alexandria.ready) return null
 
@@ -18,8 +18,8 @@ const Home = () => {
 			<code>{JSON.stringify(alexandria)}</code>
 
 			<div className="mt-2r">
-				<button onClick={onButton1Click}>Button 1</button>
-				<button onClick={onButton2Click}>Button 2</button>
+				<button onClick={decrement}>-</button>
+				<button onClick={increment}>+</button>
 			</div>
 		</div>
 	)
