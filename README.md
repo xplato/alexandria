@@ -112,7 +112,7 @@ const schema = {
   // ...
 }
 
-const Alexandria = createAlexandria<Settings>schema
+const Alexandria = createAlexandria<Settings>(schema)
 export const AlexandriaProvider = Alexandria.Provider
 export const useAlexandria = Alexandria.useConsumer
 ```
