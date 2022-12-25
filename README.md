@@ -84,7 +84,9 @@ Continue reading the documentation for more details on the API :)
 
 **Table of Contents**
 
-- [Usage](#typescript-usage)
+- [Installation](#installation)
+- [Basic TypeScript Usage](#basic-typescript-usage)
+- [TypeScript Usage](#typescript-usage)
 - [Vanilla Usage](#vanillajs--manually-typed-usage)
 - API
   - [create Alexandria](#createalexandriatypedsettingsschema-schema-config-config)
