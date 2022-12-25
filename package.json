@@ -5,7 +5,11 @@
 	"license": "MIT",
 	"repository": "https://github.com/xplato/alexandria",
 	"description": "Lightweight React wrapper of `localStorage` for declarative management of user preferences and settings.",
-	"keywords": ["localStorage", "settings", "typescript"],
+	"keywords": [
+		"typescript",
+		"localStorage",
+		"settings"
+	],
 	"main": "dist/index.js",
 	"module": "dist/index.modern.js",
 	"source": "src/index.ts",
@@ -15,7 +19,8 @@
 	"scripts": {
 		"build": "microbundle-crl --no-compress --format modern,cjs",
 		"start": "microbundle-crl watch --no-compress --format modern,cjs",
-		"publish": "npm publish --access=public"
+		"publish": "npm publish --access=public",
+		"reset": "./scripts/reset.sh"
 	},
 	"peerDependencies": {
 		"react": "^16.8.0"

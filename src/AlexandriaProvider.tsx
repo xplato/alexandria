@@ -1,18 +1,18 @@
 import React, { useState } from "react"
 
-import { createAlexandriaContext } from "./context"
+import { AlexandriaContext } from "./context"
 import { getSavedObject } from "./storage"
 import { compileDefaultSettingsFromSchema } from "./logic"
 
-import type { Config, Schema } from "./types"
+import type { AlexandriaConfig, AlexandriaSchema } from "./types"
 
-const defaultConfig: Config = {
+const defaultConfig: AlexandriaConfig = {
 	key: "alexandria",
 }
 
 interface Props {
-	schema: Schema
-	config?: Config
+	schema: AlexandriaSchema
+	config?: AlexandriaConfig
 	children: React.ReactNode
 }
 
@@ -21,16 +21,15 @@ export const AlexandriaProvider = <TypedSettings extends {}>({
 	config: userConfig,
 	children,
 }: Props) => {
-	const config: Config = {
+	const config: AlexandriaConfig = {
 		...defaultConfig,
 		...userConfig,
 	}
 
-	const AlexandriaContext = createAlexandriaContext<TypedSettings>()
+	// const AlexandriaContext = createAlexandriaContext<TypedSettings>()
 
-	const defaultSettings = compileDefaultSettingsFromSchema<TypedSettings>(
-		schema
-	) as TypedSettings
+	const defaultSettings =
+		compileDefaultSettingsFromSchema<TypedSettings>(schema)
 
 	const loadSettings = (): TypedSettings => {
 		return getSavedObject(config.key, defaultSettings)

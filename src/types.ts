@@ -4,32 +4,38 @@ export interface AlexandriaOperatingContext<TypedSettings> {
 	ready: boolean
 	cycleBetween: (key: keyof TypedSettings, values: string[]) => void
 	reset: (key?: keyof TypedSettings) => void
-	set: (key: keyof TypedSettings, value: SettingValue) => void
+	set: <Key extends keyof TypedSettings>(
+		key: Key,
+		value: TypedSettings[Key]
+	) => void
 	toggle: (key: keyof TypedSettings) => void
-	toggleBetween: (key: keyof TypedSettings, values: string[]) => void
+	toggleBetween: <Key extends keyof TypedSettings>(
+		key: Key,
+		values: TypedSettings[Key][]
+	) => void
 }
 
-export type SettingValue = string | boolean | number | unknown[] | object
+export type AlexandriaSetting = string | boolean | number | unknown[] | object
 
-export interface Schema {
+export interface AlexandriaSchema {
 	[key: string]: {
 		allow?: string[] | boolean[] | "*"
-		validate?: (value: SettingValue) => boolean
-		default: SettingValue
+		validate?: (value: AlexandriaSetting) => boolean
+		default: AlexandriaSetting
 	}
 }
 
 export interface UnknownSettings {
-	[key: string]: SettingValue
+	[key: string]: AlexandriaSetting
 }
 
-export interface Config {
+export interface AlexandriaConfig {
 	key: string
 }
 
 export interface TAlexandriaContext<TypedSettings> {
 	settings: TypedSettings
 	setSettings: Dispatch<SetStateAction<TypedSettings>>
-	schema: Schema
-	config: Config
+	schema: AlexandriaSchema
+	config: AlexandriaConfig
 }

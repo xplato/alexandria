@@ -1,32 +1,30 @@
-import { useContext, useEffect, useState } from "react"
+import { Context, useContext, useEffect, useState } from "react"
 
-import { createAlexandriaContext } from "./context"
+import { AlexandriaContext } from "./context"
 import { compileDefaultSettingsFromSchema, isAllowedValue } from "./logic"
 import { getSavedObject, saveObject } from "./storage"
 import { alexandriaError } from "./errors"
 
-import { AlexandriaOperatingContext, SettingValue } from "./types"
+import {
+	AlexandriaOperatingContext,
+	AlexandriaSetting,
+	TAlexandriaContext,
+} from "./types"
 
 export const useAlexandria = <
 	TypedSettings extends {}
 >(): AlexandriaOperatingContext<TypedSettings> & TypedSettings => {
-	const AlexandriaContext = createAlexandriaContext<TypedSettings>()
-
-	const { settings, setSettings, schema, config } =
-		useContext(AlexandriaContext)
-
-	if (!schema) {
-		return {} as never
-	}
-
+	const { settings, setSettings, schema, config } = useContext(
+		AlexandriaContext as Context<TAlexandriaContext<TypedSettings>>
+	)
 	const defaultSettings =
 		compileDefaultSettingsFromSchema<TypedSettings>(schema)
-
-	const [isServer, setIsServer] = useState(true)
-
 	const knownSettings = Object.keys(
 		defaultSettings
 	) as (keyof TypedSettings)[]
+
+	const [isServer, setIsServer] = useState(true)
+
 	const isKnownSetting = (key: keyof TypedSettings): boolean =>
 		knownSettings.includes(key)
 
@@ -37,14 +35,16 @@ export const useAlexandria = <
 
 		for (const [key, value] of Object.entries(settingsToValidate)) {
 			const known = isKnownSetting(key as keyof TypedSettings)
-			const allowed = isAllowedValue(key, value as SettingValue, schema)
+			const allowed = isAllowedValue(
+				key,
+				value as AlexandriaSetting,
+				schema
+			)
 
 			if (known) {
 				if (allowed) {
-					// @ts-ignore
 					newSettings[key] = value as never
 				} else {
-					// @ts-ignore
 					newSettings[key] = settings[key]
 					throw alexandriaError(
 						"invalidSettingValue",
@@ -121,17 +121,17 @@ export const useAlexandria = <
 
 		setWithValidation(settings => ({
 			...settings,
-			// @ts-ignore
 			[key]: defaultSettings[key],
 		}))
 	}
 
-	const set = (key: keyof TypedSettings, value: any) => {
+	const set = <Key extends keyof TypedSettings>(
+		key: Key,
+		value: TypedSettings[Key]
+	) => {
 		throwIfUnknownSetting(key)
 
-		// @ts-ignore
 		if (settings[key] === value) return
-		// @ts-ignore
 		setSettings(settings => validateSettings({ ...settings, [key]: value }))
 	}
 
@@ -143,9 +143,9 @@ export const useAlexandria = <
 		}))
 	}
 
-	const toggleBetween = (
-		key: keyof TypedSettings,
-		values: [string, string]
+	const toggleBetween = <Key extends keyof TypedSettings>(
+		key: Key,
+		values: TypedSettings[Key][]
 	) => {
 		throwIfUnknownSetting(key)
 		setWithValidation(settings => ({

@@ -1,10 +1,10 @@
 import { alexandriaError } from "./errors"
-import { Schema, SettingValue } from "./types"
+import { AlexandriaSchema, AlexandriaSetting } from "./types"
 
 export const isAllowedValue = (
 	key: string,
-	value: SettingValue,
-	schema: Schema
+	value: AlexandriaSetting,
+	schema: AlexandriaSchema
 ): boolean => {
 	const setting = schema[key]
 
@@ -30,7 +30,7 @@ export const isAllowedValue = (
 }
 
 export const compileDefaultSettingsFromSchema = <TypedSettings extends {}>(
-	schema: Schema
+	schema: AlexandriaSchema
 ): TypedSettings => {
 	let settings: Partial<TypedSettings> = {}
 

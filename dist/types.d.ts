@@ -1,28 +1,29 @@
 import { Dispatch, SetStateAction } from "react";
-export interface Alexandria extends Settings {
-    cycleBetween: (key: string, values: string[]) => void;
-    reset: (key?: string) => void;
-    set: (key: string, value: SettingValue) => void;
-    toggle: (key: string) => void;
-    toggleBetween: (key: string, values: string[]) => void;
+export interface AlexandriaOperatingContext<TypedSettings> {
+    ready: boolean;
+    cycleBetween: (key: keyof TypedSettings, values: string[]) => void;
+    reset: (key?: keyof TypedSettings) => void;
+    set: <Key extends keyof TypedSettings>(key: Key, value: TypedSettings[Key]) => void;
+    toggle: (key: keyof TypedSettings) => void;
+    toggleBetween: <Key extends keyof TypedSettings>(key: Key, values: TypedSettings[Key][]) => void;
 }
-export declare type SettingValue = string | boolean | number | unknown[] | object;
-export interface Schema {
+export declare type AlexandriaSetting = string | boolean | number | unknown[] | object;
+export interface AlexandriaSchema {
     [key: string]: {
-        allow: string[] | boolean[] | "*" | undefined;
-        validate: ((value: SettingValue) => boolean) | undefined;
-        default: SettingValue;
+        allow?: string[] | boolean[] | "*";
+        validate?: (value: AlexandriaSetting) => boolean;
+        default: AlexandriaSetting;
     };
 }
-export interface Settings {
-    [key: string]: SettingValue;
+export interface UnknownSettings {
+    [key: string]: AlexandriaSetting;
 }
-export interface Config {
+export interface AlexandriaConfig {
     key: string;
 }
-export interface AlexandriaContext {
-    settings: Settings;
-    setSettings: Dispatch<SetStateAction<Settings>>;
-    schema: Schema;
-    config: Config;
+export interface TAlexandriaContext<TypedSettings> {
+    settings: TypedSettings;
+    setSettings: Dispatch<SetStateAction<TypedSettings>>;
+    schema: AlexandriaSchema;
+    config: AlexandriaConfig;
 }

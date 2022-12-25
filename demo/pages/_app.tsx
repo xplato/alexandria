@@ -1,6 +1,4 @@
-import { AlexandriaProvider } from "@xplato/alexandria"
-
-import { schema } from "../logic"
+import { AlexandriaProvider } from "../logic"
 
 import type { AppProps } from "next/app"
 
@@ -9,7 +7,7 @@ import "../styles/global.css"
 
 const App = ({ Component, pageProps }: AppProps) => {
 	return (
-		<AlexandriaProvider schema={schema}>
+		<AlexandriaProvider>
 			<Component {...pageProps} />
 		</AlexandriaProvider>
 	)

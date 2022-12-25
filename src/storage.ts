@@ -1,4 +1,4 @@
-export const isServer = typeof window === "undefined"
+const isServer = typeof window === "undefined"
 
 export const saveObject = <T>(key: string, value: T): void => {
 	if (isServer) return

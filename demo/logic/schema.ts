@@ -1,14 +1,12 @@
-export const schema = {
-	accent: {
+import { AlexandriaSchema } from "@xplato/alexandria"
+
+export const schema: AlexandriaSchema = {
+	color: {
 		allow: ["blue", "red"],
 		default: "blue",
 	},
-	darkMode: {
+	isDark: {
 		allow: [true, false],
 		default: false,
-	},
-	theme: {
-		allow: ["light", "dark", "system"],
-		default: "system",
 	},
 }

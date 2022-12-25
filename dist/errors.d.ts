@@ -1,7 +1,7 @@
-import { Schema } from "./types";
+import { AlexandriaSchema } from "./types";
 export declare const errors: {
     unknownSetting: (key: string) => string;
-    invalidSettingValue: (key: string, value: string, schema: Schema) => string;
+    invalidSettingValue: (key: string, value: string, schema: AlexandriaSchema) => string;
     invalidSchema: (schema: unknown) => string;
     emptySchema: () => string;
 };
