@@ -157,20 +157,21 @@ const PlainUsage = () => (
 )
 ```
 
-### `AlexandriaProvider<TypedSettings>{schema: Schema, config?: Config}`
+### `AlexandriaProvider<TypedSettings?>{schema: Schema, config?: Config}`
 
 The `AlexandriaProvider` is a React component that wraps your app and provides the `useAlexandria` hook with the settings you want to use. Under the hood, it uses the React Context API.
 
 View the Basic Usage section for an example of how to use it.
 
-It accepts two props:
+It accepts two props and an optional type argument:
 
 -   `schema`: Your Settings Schema (described below)
 -   `config`: Your Config (described below)
+-   `TypedSettings`: The type of your settings; not required if created by `createAlexandria`
 
 #### `schema`
 
-[Go to type definition](https://github.com/xplato/alexandria/blob/ea9fe4b44685e6c4218864786433462a18ed79b7/src/types.ts#L14)
+[Go to types file](https://github.com/xplato/alexandria/blob/ea9fe4b44685e6c4218864786433462a18ed79b7/src/types.ts)
 
 The schema is an object that defines the structure of all your settings. It is used during validation to ensure the user's settings are in sync with your schema. It also defines the default values for your settings.
 
@@ -217,9 +218,11 @@ The config is a small object that allows you to tweak some data/behavior of Alex
 
 The default value is `"alexandria"`.
 
-### `useAlexandria<TypedSettings>()`
+### `useAlexandria<TypedSettings?>()`
 
 The `useAlexandria` hook is what you use to access your settings. It returns a merged object of your settings and some methods for updating them.
+
+It accepts no arguments except an optional type argument, `TypedSettings`. This is not required if created with `createAlexandria`.
 
 I prefer to use and assign the whole object directly like so:
 
