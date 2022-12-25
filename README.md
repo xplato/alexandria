@@ -4,7 +4,11 @@ Alexandria is a lightweight React wrapper for `localStorage`. It's primarily mea
 
 ## Features
 
--   Excellent TypeScript integration (see videos)
+-   Deep TypeScript integration; [see videos](#typescript-demonstration)
+-   Automatic validation and persistence to `localStorage`
+-   One-line addition for projects using SSR
+-   Lightweight
+-   Zero dependencies
 
 ## Installation
 
