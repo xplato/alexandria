@@ -26,20 +26,20 @@ import { createAlexandria, Schema } from "@xplato/alexandria"
 
 // 2. Define your Settings as an interface/type
 interface Settings {
-	theme: "light" | "dark" // be as specific as possible
-	sessionID: string
+  theme: "light" | "dark" // be as specific as possible
+  sessionID: string
 }
 
 // 3. Define your settings schema
 const schema: Schema = {
-	theme: {
-		allow: ["light", "dark"],
-		default: "light",
-	},
-	sessionID: {
-		validate: value => isUUID(value), // an imperative alternative to setting `allow`
-		default: "00000000-0000-0000-0000-000000000000",
-	},
+  theme: {
+    allow: ["light", "dark"],
+    default: "light",
+  },
+  sessionID: {
+    validate: value => isUUID(value), // an imperative alternative to setting `allow`
+    default: "00000000-0000-0000-0000-000000000000",
+  },
 }
 
 // 4. Create Alexandria
@@ -49,28 +49,28 @@ export const useAlexandria = Alexandria.useConsumer
 
 // 5. Wrap your App with the AlexandriaProvider
 const App = () => (
-	<AlexandriaProvider>
-		<Main />
-	</AlexandriaProvider>
+  <AlexandriaProvider>
+    <Main />
+  </AlexandriaProvider>
 )
 
 // 6. Use the useAlexandria hook to access your settings!
 const Main = () => {
-	const alexandria = useAlexandria()
+  const alexandria = useAlexandria()
 
-	const increment = () => {
-		alexandria.set("count", alexandria.count + 1)
-	}
+  const increment = () => {
+    alexandria.set("count", alexandria.count + 1)
+  }
 
-	// See the SSR section for more details on this
-	if (!alexandria.ready) return null
+  // See the SSR section for more details on this
+  if (!alexandria.ready) return null
 
-	return (
-		<>
-			<p>{alexandria.theme}</p>
-			<button onClick={increment}>Mod</button>
-		</>
-	)
+  return (
+    <>
+      <p>{alexandria.theme}</p>
+      <button onClick={increment}>Mod</button>
+    </>
+  )
 }
 ```
 
@@ -82,17 +82,17 @@ Instead of creating the provider and consumer, you just import them directly:
 import { AlexandriaProvider, useAlexandria } from "@xplato/alexandria"
 
 interface MySettings {
-	// ...
+  // ...
 }
 
 const App = () => (
-	<AlexandriaProvider<MySettings> schema={schema}>
-		<Main />
-	</AlexandriaProvider>
+  <AlexandriaProvider<MySettings> schema={schema}>
+    <Main />
+  </AlexandriaProvider>
 )
 
 const Main = () => {
-	const alexandria = useAlexandria<MySettings>()
+  const alexandria = useAlexandria<MySettings>()
 }
 ```
 
@@ -116,11 +116,11 @@ import { createAlexandria } from "@xplato/alexandria"
 
 // Exported so your components can use if needed
 export interface Settings {
-	// ...
+  // ...
 }
 
 const schema = {
-	// ...
+  // ...
 }
 
 const Alexandria = createAlexandria<Settings>(schema)
@@ -134,13 +134,13 @@ Now, you can import and use the provider and consumer without having to annotate
 import { AlexandriaProvider, useAlexandria } from "./lib/alexandria"
 
 const App = () => (
-	<AlexandriaProvider>
-		<Main />
-	</AlexandriaProvider>
+  <AlexandriaProvider>
+    <Main />
+  </AlexandriaProvider>
 )
 
 const Main = () => {
-	const alexandria = useAlexandria()
+  const alexandria = useAlexandria()
 }
 ```
 
@@ -164,10 +164,10 @@ As an example, let's say you want to store a user's theme preference. You could 
 
 ```tsx
 const schema = {
-	theme: {
-		allow: ["light", "dark"],
-		default: "light",
-	},
+  theme: {
+    allow: ["light", "dark"],
+    default: "light",
+  },
 }
 ```
 
@@ -175,10 +175,10 @@ In a lot of cases, you'll know ahead of time what values your settings can be. S
 
 ```tsx
 const schema = {
-	accent: {
-		allow: "*",
-		default: "#3452ff",
-	},
+  accent: {
+    allow: "*",
+    default: "#3452ff",
+  },
 }
 ```
 
@@ -186,10 +186,10 @@ Better yet, you can alternatively define a `validate` function to perform more c
 
 ```tsx
 const schema = {
-	accent: {
-		validate: value => /^#[0-9a-f]{6}$/i.test(value),
-		default: "#3452ff",
-	},
+  accent: {
+    validate: value => /^#[0-9a-f]{6}$/i.test(value),
+    default: "#3452ff",
+  },
 }
 ```
 
@@ -302,13 +302,13 @@ To avoid these issues, you can use the `ready` property from the `useAlexandria`
 
 ```tsx
 const MyComponent = () => {
-	const alexandria = useAlexandria()
+  const alexandria = useAlexandria()
 
-	if (!alexandria.ready) {
-		return null
-	}
+  if (!alexandria.ready) {
+    return null
+  }
 
-	return <div>Theme: {alexandria.theme}</div>
+  return <div>Theme: {alexandria.theme}</div>
 }
 ```
 
