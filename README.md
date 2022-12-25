@@ -78,35 +78,30 @@ const Main = () => {
 }
 ```
 
-Plain JavaScript/Manually Typed TypeScript is essentially the same, apart from the type annotations in the provider and hook, of course.
-
-Instead of creating the provider and consumer, you just import them directly:
-
-```tsx
-import { AlexandriaProvider, useAlexandria } from "@xplato/alexandria"
-
-interface MySettings {
-  // ...
-}
-
-const App = () => (
-  <AlexandriaProvider<MySettings> schema={schema}>
-    <Main />
-  </AlexandriaProvider>
-)
-
-const Main = () => {
-  const alexandria = useAlexandria<MySettings>()
-}
-```
-
-The reason why this is not the default is because it would require you to annotate both the provider and hook in every place you use them, which is annoying.
-
 Continue reading the documentation for more details on the API :)
 
 ## Documentation
 
-### Typed Usage
+**Table of Contents**
+
+- [Usage](#typescript-usage)
+- [Vanilla Usage](#vanillajs--manually-typed-usage)
+- API
+  - [create Alexandria](#createalexandriatypedsettingsschema-schema-config-config)
+  - [AlexandriaProvider](#alexandriaprovidertypedsettingsschema-schema-config-config)
+    - [Schema](#schema)
+    - [Config](#config)
+  - [useAlexandria](#usealexandriatypedsettings)
+    - [Access & Methods](#access--methods)
+    - [`alexandria.set`](#setkey-value)
+    - [`alexandria.toggle`](#togglekey)
+    - [`alexandria.toggleBetweem`](#togglebetweenkey-value1-value2)
+    - [`alexandria.cycleBetween`](#cyclebetweenkey-value1-value2-value3)
+    - [`alexandria.reset`](#resetkey)
+    - [`alexandria.ready`](#ready-boolean)
+- [SSR](#integration-with-ssr)
+
+### TypeScript Usage
 
 Alexandria is meant for TypeScript! [See the videos](#typescript-demonstration) at the bottom of this doc for examples of how Alexandria integrates with TypeScript.
 
@@ -147,6 +142,36 @@ const Main = () => {
   const alexandria = useAlexandria()
 }
 ```
+
+### VanillaJS / Manually Typed Usage
+
+Plain JavaScript / Manually Typed TypeScript is essentially the same, apart from the type annotations in the provider and hook, of course.
+
+Instead of creating the provider and consumer, you just import them directly:
+
+```tsx
+import { AlexandriaProvider, useAlexandria } from "@xplato/alexandria"
+
+interface MySettings {
+  // ...
+}
+
+const App = () => (
+  <AlexandriaProvider<MySettings> schema={schema}>
+    <Main />
+  </AlexandriaProvider>
+)
+
+const Main = () => {
+  const alexandria = useAlexandria<MySettings>()
+}
+```
+
+The reason why this is not the default is because it would require you to annotate both the provider and hook in every place you use them, which is annoying.
+
+### `createAlexandria<TypedSettings>(schema: Schema, config?: Config)`
+
+This function is what allows you to deeply integrate your types into Alexandria. Calling it returns an object with two properties: `Provider` and `useConsumer`. These are the same as the default exports, but with the type argument already applied.
 
 ### `AlexandriaProvider<TypedSettings?>{schema: Schema, config?: Config}`
 
@@ -228,7 +253,7 @@ Your settings are spread onto the object returned by `useAlexandria`, so they ca
 
 **Methods**
 
-##### `set`
+##### `set(key, value)`
 
 `set` is used to set a single setting to a specific value. It accepts two arguments: the setting name and the value to set it to.
 
@@ -237,7 +262,7 @@ alexandria.set("theme", "dark")
 alexandria.set("openLinksInNewTab", true)
 ```
 
-##### `toggle`
+##### `toggle(key)`
 
 `toggle` is used to toggle a setting between `true` and `false`. It accepts a single argument: the setting name.
 
@@ -245,7 +270,7 @@ alexandria.set("openLinksInNewTab", true)
 alexandria.toggle("darkMode")
 ```
 
-##### `toggleBetween`
+##### `toggleBetween(key, [value1, value2])`
 
 `toggleBetween` is used to toggle a setting between a list of 2 values. It accepts two arguments: the setting name and an array of 2 values to toggle between. This is a more specific alternative to `cycleBetween`.
 
@@ -253,7 +278,7 @@ alexandria.toggle("darkMode")
 alexandria.toggleBetween("theme", ["light", "dark"])
 ```
 
-##### `cycleBetween`
+##### `cycleBetween(key, [value1, value2, value3, ...])`
 
 `cycleBetween` is used to cycle a setting between a list of values. It accepts two arguments: the setting name and an array of values to cycle between.
 
@@ -261,7 +286,7 @@ alexandria.toggleBetween("theme", ["light", "dark"])
 alexandria.cycleBetween("theme", ["light", "dark", "system"])
 ```
 
-##### `reset`
+##### `reset(key?)`
 
 `reset` is used to reset a setting to its default value, or to reset all settings if no argument is provided. It accepts an optional argument: the setting name.
 
@@ -270,7 +295,7 @@ alexandria.reset("theme") // theme => "light"
 alexandria.reset() // all settings => their defaults
 ```
 
-##### `ready`
+##### `ready: boolean`
 
 The `ready` property defines when browser-level APIs (`localStorage`) are ready to be used. This is useful for SSR, where you don't want to render your app until the settings are ready.
 
