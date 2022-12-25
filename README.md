@@ -330,8 +330,8 @@ const MyComponent = () => {
 
 The `set` function narrows the key and values for you, so you can't set a setting to an invalid value.
 
-![set]https://user-images.githubusercontent.com/87919558/209453564-ba8a84a2-26bf-498a-8cd1-55bef03bc0e1.mov)
+https://user-images.githubusercontent.com/87919558/209453564-ba8a84a2-26bf-498a-8cd1-55bef03bc0e1.mov
 
 The `toggleBetween` function narrows the key and values for you as well:
 
-![toggleBetween](https://user-images.githubusercontent.com/87919558/209453569-42e61e51-e0a1-4934-bdea-18d465d41ca6.mov)
+https://user-images.githubusercontent.com/87919558/209453569-42e61e51-e0a1-4934-bdea-18d465d41ca6.mov
