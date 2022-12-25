@@ -1,3 +1,5 @@
 export * from "./AlexandriaProvider"
-export * from "./useAlexandria"
+export * from "./create"
 export * from "./context"
+export * from "./types"
+export * from "./useAlexandria"

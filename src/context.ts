@@ -1,5 +1,8 @@
 import { createContext } from "react"
 
-import { TAlexandriaContext } from "types"
+import { TAlexandriaContext } from "./types"
 
-export const AlexandriaContext = createContext<TAlexandriaContext>({} as never)
+// Consumers must cast this to TAlexandriaContext<TypedSettings>
+export const AlexandriaContext = createContext<TAlexandriaContext<any>>(
+	{} as never
+)

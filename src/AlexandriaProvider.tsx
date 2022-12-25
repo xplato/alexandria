@@ -1,50 +1,46 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
-import { AlexandriaContext } from "context"
-import { getSavedObject } from "storage"
-import { compileDefaultSettingsFromSchema } from "logic"
+import { AlexandriaContext } from "./context"
+import { getSavedObject } from "./storage"
+import { compileDefaultSettingsFromSchema } from "./logic"
 
-import type { Config, Schema, Settings } from "types"
+import type { AlexandriaConfig, AlexandriaSchema } from "./types"
 
-const defaultConfig: Config = {
+const defaultConfig: AlexandriaConfig = {
 	key: "alexandria",
 }
 
 interface Props {
-	schema: Schema
-	config?: Config
+	schema: AlexandriaSchema
+	config?: AlexandriaConfig
 	children: React.ReactNode
 }
 
-export const AlexandriaProvider = ({
+export const AlexandriaProvider = <TypedSettings extends {}>({
 	schema,
 	config: userConfig,
 	children,
 }: Props) => {
-	const config: Config = {
+	const config: AlexandriaConfig = {
 		...defaultConfig,
 		...userConfig,
 	}
 
-	const defaultSettings = compileDefaultSettingsFromSchema(schema)
+	// const AlexandriaContext = createAlexandriaContext<TypedSettings>()
 
-	const loadSettings = () => {
+	const defaultSettings =
+		compileDefaultSettingsFromSchema<TypedSettings>(schema)
+
+	const loadSettings = (): TypedSettings => {
 		return getSavedObject(config.key, defaultSettings)
 	}
 
-	const [settings, setSettings] = useState<Settings>(() => {
+	const [settings, setSettings] = useState<TypedSettings>(() => {
 		return {
 			...defaultSettings,
 			...loadSettings(),
-		} as Settings
+		}
 	})
-
-	useEffect(() => {
-		if (!window.localStorage) return
-
-		const savedSettings = loadSettings()
-		settings.current = savedSettings
-	}, [])
 
 	return (
 		<AlexandriaContext.Provider

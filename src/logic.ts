@@ -1,9 +1,10 @@
-import { Schema, Settings, SettingValue } from "types"
+import { alexandriaError } from "./errors"
+import { AlexandriaSchema, AlexandriaSetting } from "./types"
 
 export const isAllowedValue = (
-	key: keyof Settings,
-	value: SettingValue,
-	schema: Schema
+	key: string,
+	value: AlexandriaSetting,
+	schema: AlexandriaSchema
 ): boolean => {
 	const setting = schema[key]
 
@@ -28,12 +29,22 @@ export const isAllowedValue = (
 	return setting.allow.includes(value as never)
 }
 
-export const compileDefaultSettingsFromSchema = (schema: Schema): Settings => {
-	let settings: Partial<Settings> = {}
+export const compileDefaultSettingsFromSchema = <TypedSettings extends {}>(
+	schema: AlexandriaSchema
+): TypedSettings => {
+	let settings: Partial<TypedSettings> = {}
 
-	for (const [key, value] of Object.entries(schema)) {
+	if (typeof schema !== "object") {
+		throw alexandriaError("invalidSchema", schema)
+	}
+
+	if (Object.keys(schema || {}).length === 0) {
+		throw alexandriaError("emptySchema")
+	}
+
+	for (const [key, value] of Object.entries(schema || {})) {
 		settings[key] = value.default
 	}
 
-	return settings as Settings // Caller is responsible for providing defaults
+	return settings as TypedSettings // Caller is responsible for providing defaults
 }
