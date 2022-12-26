@@ -15,9 +15,6 @@ export interface AlexandriaSchema {
         default: AlexandriaSetting;
     };
 }
-export interface UnknownSettings {
-    [key: string]: AlexandriaSetting;
-}
 export interface AlexandriaConfig {
     key: string;
 }

@@ -101,7 +101,7 @@ Continue reading the documentation for more details on the API :)
     - [`alexandria.cycleBetween`](#cyclebetweenkey-value1-value2-value3)
     - [`alexandria.reset`](#resetkey)
     - [`alexandria.ready`](#ready-boolean)
-- [SSR](#integration-with-ssr)
+  - [SSR](#integration-with-ssr)
 
 ### TypeScript Usage
 

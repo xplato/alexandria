@@ -25,10 +25,6 @@ export interface AlexandriaSchema {
 	}
 }
 
-export interface UnknownSettings {
-	[key: string]: AlexandriaSetting
-}
-
 export interface AlexandriaConfig {
 	key: string
 }
