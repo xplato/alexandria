@@ -1,6 +1,6 @@
 {
 	"name": "@xplato/alexandria",
-	"version": "1.3.5",
+	"version": "1.3.6",
 	"author": "Tristan Brewster <xplato@infi.im>",
 	"license": "MIT",
 	"repository": "https://github.com/xplato/alexandria",
@@ -23,7 +23,7 @@
 		"reset": "./scripts/reset.sh"
 	},
 	"peerDependencies": {
-		"react": "^16.8.0"
+		"react": "16 || 17 || 18"
 	},
 	"devDependencies": {
 		"@types/node": "^12.12.38",
